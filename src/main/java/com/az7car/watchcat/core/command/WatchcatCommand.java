@@ -28,6 +28,7 @@ public class WatchcatCommand implements CommandExecutor, TabCompleter {
     private final ShadowFlaggingSystem flaggingSystem;
     private final BanWaveExecutor banWaveExecutor;
     private final Set<UUID> alertToggles;
+    private final long startTime;
 
     public WatchcatCommand(WatchcatPlugin plugin, CheckRegistry registry,
                            ShadowFlaggingSystem flaggingSystem, BanWaveExecutor banWaveExecutor) {
@@ -36,6 +37,7 @@ public class WatchcatCommand implements CommandExecutor, TabCompleter {
         this.flaggingSystem = flaggingSystem;
         this.banWaveExecutor = banWaveExecutor;
         this.alertToggles = new HashSet<>();
+        this.startTime = System.currentTimeMillis();
     }
 
     public boolean hasAlertsOn(Player player) { return alertToggles.contains(player.getUniqueId()); }
@@ -232,8 +234,25 @@ public class WatchcatCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(ChatColor.GREEN + "Banned " + reasonTarget + " with reason: " + banReason);
                 return true;
 
+            case "info":
+                if (!sender.hasPermission("watchcat.stats")) {
+                    sender.sendMessage(ChatColor.RED + "No permission.");
+                    return true;
+                }
+                long uptime = (System.currentTimeMillis() - startTime) / 1000;
+                long hours = uptime / 3600;
+                long mins = (uptime % 3600) / 60;
+                sender.sendMessage(ChatColor.GOLD + "=== Watchcat Info ===");
+                sender.sendMessage(ChatColor.YELLOW + "Version: 1.0.0");
+                sender.sendMessage(ChatColor.YELLOW + "Uptime: " + hours + "h " + mins + "m");
+                sender.sendMessage(ChatColor.YELLOW + "Total checks: " + registry.getChecks().size());
+                sender.sendMessage(ChatColor.YELLOW + "Online players: " + Bukkit.getOnlinePlayers().size());
+                sender.sendMessage(ChatColor.YELLOW + "Tracked players: " + flaggingSystem.getTrackedPlayerCount());
+                sender.sendMessage(ChatColor.YELLOW + "Paper: 1.21.11 | Java 21");
+                return true;
+
             default:
-                sender.sendMessage(ChatColor.RED + "Unknown subcommand. Use: alerts, stats, profile, checks, player, reload, whitelist, report, banwave, reason");
+                sender.sendMessage(ChatColor.RED + "Unknown subcommand. Use: alerts, stats, profile, checks, player, reload, whitelist, report, banwave, reason, info");
                 return true;
         }
     }
@@ -241,7 +260,7 @@ public class WatchcatCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("alerts", "stats", "profile", "checks", "player", "reload", "whitelist", "report", "banwave", "reason").stream()
+            return Arrays.asList("alerts", "stats", "profile", "checks", "player", "reload", "whitelist", "report", "banwave", "reason", "info").stream()
                 .filter(s -> s.startsWith(args[0].toLowerCase())).collect(Collectors.toList());
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("checks")) {

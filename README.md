@@ -98,15 +98,16 @@ Edit `config.yml` in the plugin data folder. Each check has:
 
 ## Commands
 
-- `/watchcat alerts` - toggle alert messages
-- `/watchcat stats` - check performance statistics
-- `/watchcat profile <player>` - detailed flag history
-- `/watchcat checks` - list all checks with status
-- `/watchcat player <player>` - per-player check state
-- `/watchcat reload` - reload configuration
-- `/watchcat whitelist <add|remove|list> <player>` - exemption management
-- `/watchcat report <player>` - report a player
-- `/watchcat banwave` - trigger manual ban wave
+- `/watchcat alerts` or `/watchdog alerts` - toggle alert messages
+- `/watchcat stats` or `/watchdog stats` - check performance statistics  
+- `/watchcat profile` or `/watchdog profile` - detailed check profiling
+- `/watchcat checks [category]` or `/watchdog checks [category]` - list checks with status
+- `/watchcat player <name>` or `/watchdog player <name>` - per-player check state
+- `/watchcat reason <player> <reason>` or `/watchdog reason <player> <reason>` - ban a player with reason
+- `/watchcat reload` or `/watchdog reload` - reload configuration
+- `/watchcat whitelist <check|all> <player>` or `/watchdog whitelist` - exemption management
+- `/watchcat report <check> <player>` or `/watchdog report` - report a false positive
+- `/watchcat banwave` or `/watchdog banwave` - trigger manual ban wave
 
 ## Dependencies
 
