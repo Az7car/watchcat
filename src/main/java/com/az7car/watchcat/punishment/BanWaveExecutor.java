@@ -172,4 +172,56 @@ public class BanWaveExecutor {
     }
 
     public BanOffenseTracker getOffenseTracker() { return offenseTracker; }
+
+    public void banPlayerWithReason(String playerName, String reason, String severity) {
+        Player player = Bukkit.getPlayer(playerName);
+        if (player == null) {
+            logger.warning("Cannot ban " + playerName + " - not online");
+            return;
+        }
+        UUID uuid = player.getUniqueId();
+        String ip = player.getAddress() != null ? player.getAddress().getAddress().getHostAddress() : null;
+        String appealCode = plugin.getAppealCodeManager().getOrCreateCode(uuid, ip);
+        offenseTracker.incrementOffenses(uuid, ip);
+
+        String discordLink = config.getDiscordLink();
+        String serverName = config.getDiscordServerName();
+        int baseDays = SEVERITY_DAYS.getOrDefault(severity, 30);
+        double multiplier = offenseTracker.getDurationMultiplier(uuid, ip);
+        long banDuration;
+        String banReason;
+
+        if (multiplier < 0) {
+            banDuration = -1;
+            banReason = "You have been permanently banned from " + serverName + ".\n"
+                + "Reason: " + reason + "\n"
+                + "Offense count: " + offenseTracker.getOffenseCount(uuid) + "\n"
+                + "Appeal Code: " + appealCode + "\n"
+                + "Appeal at: " + discordLink;
+        } else {
+            banDuration = (long)(baseDays * multiplier);
+            String durationStr = banDuration + " days";
+            banReason = "You have been banned from " + serverName + " for " + durationStr + ".\n"
+                + "Reason: " + reason + "\n"
+                + "Offense count: " + offenseTracker.getOffenseCount(uuid) + "\n"
+                + "Appeal Code: " + appealCode + "\n"
+                + "Appeal at: " + discordLink;
+        }
+
+        Bukkit.getBanList(org.bukkit.BanList.Type.NAME)
+            .addBan(playerName, banReason, banDuration > 0 ? new Date(System.currentTimeMillis() + banDuration * 24 * 60 * 60 * 1000L) : null, "Watchcat");
+
+        if (config.getBoolean("punishment.ip-ban", true) && ip != null && !ip.equals("127.0.0.1")) {
+            Bukkit.getBanList(org.bukkit.BanList.Type.IP)
+                .addBan(ip, banReason, banDuration > 0 ? new Date(System.currentTimeMillis() + banDuration * 24 * 60 * 60 * 1000L) : null, "Watchcat");
+        }
+
+        if (player.isOnline()) {
+            player.kick(Component.text(banReason).color(NamedTextColor.RED));
+        }
+
+        logger.info("Watchcat banned " + playerName + " [reason=" + reason + "/" + severity
+            + "] code=" + appealCode + " duration=" + (banDuration > 0 ? banDuration + "d" : "permanent")
+            + " offense#" + offenseTracker.getOffenseCount(uuid));
+    }
 }

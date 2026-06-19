@@ -46,7 +46,7 @@ public class WatchcatCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.RED + "Usage: /watchcat <alerts|stats|profile|reload|whitelist|report|banwave|player|checks>");
+            sender.sendMessage(ChatColor.RED + "Usage: /watchcat <alerts|stats|profile|checks|player|reload|whitelist|report|banwave|reason>");
             return true;
         }
 
@@ -217,8 +217,23 @@ public class WatchcatCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(ChatColor.GREEN + "Ban wave executed.");
                 return true;
 
+            case "reason":
+                if (!sender.hasPermission("watchcat.banwave")) {
+                    sender.sendMessage(ChatColor.RED + "No permission.");
+                    return true;
+                }
+                if (args.length < 3) {
+                    sender.sendMessage(ChatColor.RED + "Usage: /watchcat reason <player> <reason>");
+                    return true;
+                }
+                String reasonTarget = args[1];
+                String banReason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                banWaveExecutor.banPlayerWithReason(reasonTarget, banReason, "high");
+                sender.sendMessage(ChatColor.GREEN + "Banned " + reasonTarget + " with reason: " + banReason);
+                return true;
+
             default:
-                sender.sendMessage(ChatColor.RED + "Unknown subcommand. Use: alerts, stats, profile, checks, player, reload, whitelist, report, banwave");
+                sender.sendMessage(ChatColor.RED + "Unknown subcommand. Use: alerts, stats, profile, checks, player, reload, whitelist, report, banwave, reason");
                 return true;
         }
     }
@@ -226,7 +241,7 @@ public class WatchcatCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("alerts", "stats", "profile", "checks", "player", "reload", "whitelist", "report", "banwave").stream()
+            return Arrays.asList("alerts", "stats", "profile", "checks", "player", "reload", "whitelist", "report", "banwave", "reason").stream()
                 .filter(s -> s.startsWith(args[0].toLowerCase())).collect(Collectors.toList());
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("checks")) {

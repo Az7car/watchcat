@@ -39,5 +39,5 @@ permissions:
 commands:
   watchcat:
     description: Watchcat anti-cheat command
-    usage: /<command> <subcommand>
-    aliases: [wc, wcat]
+    usage: /<command> <alerts|stats|profile|checks|player|reload|whitelist|report|banwave|reason>
+    aliases: [wc, wcat, watchdog]
