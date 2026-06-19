@@ -12,10 +12,12 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.ServerboundClientInformationPacket;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -89,7 +91,9 @@ public class WatchcatDuplexHandler extends ChannelDuplexHandler {
                 }
             }
         }
-        super.channelRead(ctx, msg);
+        try {
+            super.channelRead(ctx, msg);
+        } catch (Exception ignored) {}
     }
 
     private boolean runSyncChecks(PlayerData data, Packet<?> packet, String category) {
@@ -115,7 +119,9 @@ public class WatchcatDuplexHandler extends ChannelDuplexHandler {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, io.netty.channel.ChannelPromise promise) {
-        super.write(ctx, msg, promise);
+        try {
+            super.write(ctx, msg, promise);
+        } catch (Exception ignored) {}
     }
 
     public static void inject(Player player, WatchcatPlugin plugin,

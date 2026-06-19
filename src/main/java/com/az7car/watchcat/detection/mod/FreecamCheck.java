@@ -26,17 +26,21 @@ public class FreecamCheck extends AbstractCheck {
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket)) return CheckResult.PASS;
 
-        double dx = data.getPositionDelta().getX();
-        double dz = data.getPositionDelta().getZ();
+        double dx = data.getDeltaX();
+        double dz = data.getDeltaZ();
         double dh = Math.sqrt(dx * dx + dz * dz);
 
-        float yaw = packet instanceof PosRot ? ((PosRot) packet).getYaw(0) :
-                    packet instanceof Rot ? ((Rot) packet).getYaw(0) :
-                    data.getLastYaw();
-
-        float pitch = packet instanceof PosRot ? ((PosRot) packet).getPitch(0) :
-                      packet instanceof Rot ? ((Rot) packet).getPitch(0) :
-                      data.getLastPitch();
+        float yaw = data.getLastYaw();
+        float pitch = data.getLastPitch();
+        try {
+            if (packet instanceof PosRot) {
+                yaw = (float) ((PosRot) packet).getClass().getMethod("getYaw").invoke(packet);
+                pitch = (float) ((PosRot) packet).getClass().getMethod("getPitch").invoke(packet);
+            } else if (packet instanceof Rot) {
+                yaw = (float) ((Rot) packet).getClass().getMethod("getYaw").invoke(packet);
+                pitch = (float) ((Rot) packet).getClass().getMethod("getPitch").invoke(packet);
+            }
+        } catch (Exception ignored) {}
 
         double lookDirX = -Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch));
         double lookDirZ = -Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch));
@@ -56,7 +60,10 @@ public class FreecamCheck extends AbstractCheck {
         }
 
         if (packet instanceof Pos || packet instanceof PosRot) {
-            double y = packet instanceof Pos ? ((Pos) packet).getY(0) : ((PosRot) packet).getY(0);
+            double y = 0;
+            try {
+                y = (double) packet.getClass().getMethod("getY").invoke(packet);
+            } catch (Exception e) { return CheckResult.PASS; }
             if (player.isInsideVehicle()) return CheckResult.PASS;
             if (y < player.getWorld().getMinHeight() - 10 || y > player.getWorld().getMaxHeight() + 10) {
                 return CheckResult.FLAG;

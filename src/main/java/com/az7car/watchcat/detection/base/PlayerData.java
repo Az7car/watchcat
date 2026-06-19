@@ -19,6 +19,7 @@ public class PlayerData {
     private double x, y, z, lastX, lastY, lastZ;
     private float yaw, pitch, lastYaw, lastPitch;
     private float deltaYaw, deltaPitch, lastDeltaYaw, lastDeltaPitch;
+    private float lastDeltaX, lastDeltaY, lastDeltaZ;
     private boolean onGround, lastOnGround;
     private long lastPacketTime;
     private int airTicks, groundTicks;
@@ -71,6 +72,9 @@ public class PlayerData {
     }
 
     public void updatePosition(ServerPlayer nmsPlayer) {
+        lastDeltaX = (float)(x - lastX);
+        lastDeltaY = (float)(y - lastY);
+        lastDeltaZ = (float)(z - lastZ);
         lastX = x; lastY = y; lastZ = z;
         x = nmsPlayer.getX(); y = nmsPlayer.getY(); z = nmsPlayer.getZ();
         lastOnGround = onGround;
@@ -144,6 +148,11 @@ public class PlayerData {
     public float getPitch() { return pitch; }
     public float getDeltaYaw() { return deltaYaw; }
     public float getDeltaPitch() { return deltaPitch; }
+    public float getLastYaw() { return lastYaw; }
+    public float getLastPitch() { return lastPitch; }
+    public float getLastDeltaX() { return lastDeltaX; }
+    public float getLastDeltaY() { return lastDeltaY; }
+    public float getLastDeltaZ() { return lastDeltaZ; }
     public float getLastDeltaYaw() { return lastDeltaYaw; }
     public float getLastDeltaPitch() { return lastDeltaPitch; }
     public boolean isOnGround() { return onGround; }
@@ -180,6 +189,7 @@ public class PlayerData {
     public boolean isProbed() { return probed; }
     public void setProbed(boolean p) { probed = p; }
     public float getMlAnomalyScore() { return mlAnomalyScore; }
+    public float getLastGcd() { return lastGcd; }
     public void setMlAnomalyScore(float s) { mlAnomalyScore = s; }
     public FeatureVector getFeatureVector() { return featureVector; }
     public int getTick() { return tick; }

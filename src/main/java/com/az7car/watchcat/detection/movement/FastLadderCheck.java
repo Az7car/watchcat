@@ -7,6 +7,7 @@ import com.az7car.watchcat.detection.base.PlayerData;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class FastLadderCheck extends AbstractCheck {

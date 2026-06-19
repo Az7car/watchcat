@@ -27,10 +27,8 @@ public class MaceSwitchCheck extends AbstractCheck {
 
     @Override
     public CheckResult processSync(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
-        if (packet instanceof ServerboundPlayerCommandPacket cmd) {
-            if (cmd.getAction() == ServerboundPlayerCommandPacket.Action.START_USE_ITEM) {
-                return CheckResult.PASS;
-            }
+        if (packet instanceof ServerboundPlayerCommandPacket) {
+            return CheckResult.PASS;
         }
         if (!(packet instanceof net.minecraft.network.protocol.game.ServerboundInteractPacket)) return CheckResult.PASS;
 

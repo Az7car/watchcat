@@ -21,7 +21,7 @@ public class AntiFireworkCheck extends AbstractCheck {
 
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
         if (dy > 0.5) {
             boolean nearFirework = player.getNearbyEntities(3, 3, 3).stream()
                 .anyMatch(e -> e instanceof Firework);

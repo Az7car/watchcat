@@ -24,7 +24,7 @@ public class DolphinJumpCheck extends AbstractCheck {
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
         boolean inWater = player.getLocation().getBlock().getType().name().contains("WATER");
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
 
         if (inWater) waterTicks++;
         else waterTicks = 0;

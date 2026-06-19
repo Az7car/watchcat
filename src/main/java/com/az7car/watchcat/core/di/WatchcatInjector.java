@@ -296,5 +296,17 @@ public class WatchcatInjector {
         registry.register(new CrashPayloadCheck(config));
         registry.register(new ESPCheck(config));
         registry.register(new TracersCheck(config));
+
+        registry.register(new AutoLeaveCheck(config));
+        registry.register(new BookExploitCheck(config));
+        registry.register(new NoWeatherCheck(config));
+        registry.register(new AntiWDLCheck(config));
+        registry.register(new SoundPosCheck(config));
+        registry.register(new PickRangeCheck(config));
+        registry.register(new ExpPickupCheck(config));
+        registry.register(new PacketSpamCheck(config));
+        registry.register(new AntiResourcePackCheck(config));
+        registry.register(new NoPotionLabelCheck(config));
+        registry.register(new AutoWalkCheck(config));
     }
 }

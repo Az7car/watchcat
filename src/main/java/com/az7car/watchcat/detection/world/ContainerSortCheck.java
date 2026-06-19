@@ -23,7 +23,7 @@ public class ContainerSortCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundContainerClickPacket click)) return CheckResult.PASS;
-        int slot = click.getSlotNum();
+        int slot = click.slotNum();
         if (lastSlot != 0 && slot != lastSlot) {
             long timeDiff = Math.abs(System.nanoTime() - data.getLastPacketTime());
             if (timeDiff < 1_000_000) {

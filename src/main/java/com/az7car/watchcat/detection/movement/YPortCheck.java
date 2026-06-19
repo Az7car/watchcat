@@ -25,7 +25,7 @@ public class YPortCheck extends AbstractCheck {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
         if (player.isInsideVehicle() || player.isFlying()) return CheckResult.PASS;
 
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
         if (dy == 0) return CheckResult.PASS;
 
         boolean isPositive = dy > 0;

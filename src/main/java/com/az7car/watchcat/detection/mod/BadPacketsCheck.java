@@ -17,11 +17,27 @@ public class BadPacketsCheck extends AbstractCheck {
             config.isCheckEnabled("mod.badpackets"));
     }
 
+    private static float extractYaw(ServerboundMovePlayerPacket pkt) {
+        try {
+            if (pkt instanceof ServerboundMovePlayerPacket.Rot) return (float) pkt.getClass().getMethod("getYaw").invoke(pkt);
+            if (pkt instanceof ServerboundMovePlayerPacket.PosRot) return (float) pkt.getClass().getMethod("getYaw").invoke(pkt);
+        } catch (Exception ignored) {}
+        return 0;
+    }
+
+    private static float extractPitch(ServerboundMovePlayerPacket pkt) {
+        try {
+            if (pkt instanceof ServerboundMovePlayerPacket.Rot) return (float) pkt.getClass().getMethod("getPitch").invoke(pkt);
+            if (pkt instanceof ServerboundMovePlayerPacket.PosRot) return (float) pkt.getClass().getMethod("getPitch").invoke(pkt);
+        } catch (Exception ignored) {}
+        return 0;
+    }
+
     @Override
     public CheckResult processSync(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (packet instanceof ServerboundMovePlayerPacket movePacket) {
-            float yaw = movePacket.getYaw(0);
-            float pitch = movePacket.getPitch(0);
+            float yaw = extractYaw(movePacket);
+            float pitch = extractPitch(movePacket);
             if (Float.isNaN(yaw) || Float.isNaN(pitch)
                 || Float.isInfinite(yaw) || Float.isInfinite(pitch)) {
                 return CheckResult.CANCELLED;
@@ -41,8 +57,8 @@ public class BadPacketsCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (packet instanceof ServerboundMovePlayerPacket movePacket) {
-            float yaw = movePacket.getYaw(0);
-            float pitch = movePacket.getPitch(0);
+            float yaw = extractYaw(movePacket);
+            float pitch = extractPitch(movePacket);
 
             if (Float.isNaN(yaw) || Float.isNaN(pitch)
                 || Float.isInfinite(yaw) || Float.isInfinite(pitch)) {
@@ -54,9 +70,12 @@ public class BadPacketsCheck extends AbstractCheck {
             }
 
             if (movePacket instanceof ServerboundMovePlayerPacket.Pos posPacket) {
-                double x = posPacket.getX(0);
-                double y = posPacket.getY(0);
-                double z = posPacket.getZ(0);
+                double x, y, z;
+                try {
+                    x = (double) posPacket.getClass().getMethod("getX").invoke(posPacket);
+                    y = (double) posPacket.getClass().getMethod("getY").invoke(posPacket);
+                    z = (double) posPacket.getClass().getMethod("getZ").invoke(posPacket);
+                } catch (Exception e) { return CheckResult.PASS; }
 
                 if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z)
                     || Double.isInfinite(x) || Double.isInfinite(y) || Double.isInfinite(z)) {
@@ -72,9 +91,12 @@ public class BadPacketsCheck extends AbstractCheck {
         }
 
         if (packet instanceof ServerboundUseItemOnPacket placePacket) {
-            if (placePacket.getBlockPos().getY() < -64 || placePacket.getBlockPos().getY() > 320) {
-                return CheckResult.FLAG;
-            }
+            try {
+                Object hitResult = placePacket.getClass().getMethod("getHitResult").invoke(placePacket);
+                Object blockPos = hitResult.getClass().getMethod("getBlockPos").invoke(hitResult);
+                int y = (int) blockPos.getClass().getMethod("getY").invoke(blockPos);
+                if (y < -64 || y > 320) return CheckResult.FLAG;
+            } catch (Exception ignored) {}
         }
 
         return CheckResult.PASS;

@@ -45,7 +45,10 @@ public final class MathUtils {
     }
 
     public static float[] floatListToArray(java.util.Collection<Float> collection) {
-        return collection.stream().mapToFloat(Float::floatValue).toArray();
+        float[] result = new float[collection.size()];
+        int i = 0;
+        for (float f : collection) result[i++] = f;
+        return result;
     }
 
     public static double lerp(double a, double b, double t) {

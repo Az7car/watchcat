@@ -23,9 +23,17 @@ public class NoPitchLimitCheck extends AbstractCheck {
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
         float pitch = 0;
-        if (move instanceof ServerboundMovePlayerPacket.PosRot) pitch = ((ServerboundMovePlayerPacket.PosRot) move).getPitch(0);
-        else if (move instanceof ServerboundMovePlayerPacket.Rot) pitch = ((ServerboundMovePlayerPacket.Rot) move).getPitch(0);
-        else return CheckResult.PASS;
+        boolean hasRot = false;
+        try {
+            if (move instanceof ServerboundMovePlayerPacket.PosRot) {
+                pitch = (float) ((ServerboundMovePlayerPacket.PosRot) move).getClass().getMethod("getPitch").invoke(move);
+                hasRot = true;
+            } else if (move instanceof ServerboundMovePlayerPacket.Rot) {
+                pitch = (float) ((ServerboundMovePlayerPacket.Rot) move).getClass().getMethod("getPitch").invoke(move);
+                hasRot = true;
+            }
+        } catch (Exception e) { return CheckResult.PASS; }
+        if (!hasRot) return CheckResult.PASS;
 
         if (pitch > 90 || pitch < -90) {
             pitchLimitCount++;

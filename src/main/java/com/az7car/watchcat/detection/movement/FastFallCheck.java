@@ -25,13 +25,13 @@ public class FastFallCheck extends AbstractCheck {
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
         if (move.isOnGround()) return CheckResult.PASS;
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
         if (dy >= 0) return CheckResult.PASS;
 
         double currentFall = Math.abs(dy);
         if (currentFall < 0.01) return CheckResult.PASS;
 
-        double prevDy = data.getLastPositionDelta().getY();
+        double prevDy = data.getLastDeltaY();
         if (prevDy >= 0) return CheckResult.PASS;
 
         if (currentFall > 0.0785 && currentFall < 0.08) {

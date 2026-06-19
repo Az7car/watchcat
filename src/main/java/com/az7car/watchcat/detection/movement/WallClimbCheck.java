@@ -26,7 +26,7 @@ public class WallClimbCheck extends AbstractCheck {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
         if (move.isOnGround() || player.isInsideVehicle() || player.isFlying()) return CheckResult.PASS;
 
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
         if (dy <= 0) {
             wasAgainstWall = false;
             return CheckResult.PASS;

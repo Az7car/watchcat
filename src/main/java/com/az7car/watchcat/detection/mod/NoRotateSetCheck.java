@@ -25,7 +25,7 @@ public class NoRotateSetCheck extends AbstractCheck {
     @Override
     public CheckResult processSync(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (packet instanceof ClientboundRotateHeadPacket headPacket) {
-            lastServerYaw = headPacket.getYaw();
+            lastServerYaw = headPacket.getYHeadRot();
         }
         if (packet instanceof ClientboundSetEntityDataPacket) {
             return CheckResult.PASS;
@@ -48,7 +48,7 @@ public class NoRotateSetCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (packet instanceof ClientboundRotateHeadPacket headPacket) {
-            lastServerYaw = headPacket.getYaw();
+            lastServerYaw = headPacket.getYHeadRot();
         }
         if (packet instanceof net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.Rot
             || packet instanceof net.minecraft.network.protocol.game.ServerboundMovePlayerPacket.PosRot) {

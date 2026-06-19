@@ -5,7 +5,7 @@ import com.az7car.watchcat.core.pipeline.AbstractCheck;
 import com.az7car.watchcat.detection.base.CheckResult;
 import com.az7car.watchcat.detection.base.PlayerData;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.entity.Player;
 import java.util.Arrays;
@@ -35,7 +35,9 @@ public class AntiAntiCheatCheck extends AbstractCheck {
         if (!(packet instanceof ServerboundCustomPayloadPacket payload)) return CheckResult.PASS;
         String channel;
         try {
-            channel = payload.getName();
+            Object p = payload.getClass().getMethod("payload").invoke(payload);
+            Object id = p.getClass().getMethod("type").invoke(p);
+            channel = id.toString();
         } catch (Exception e) {
             return CheckResult.PASS;
         }

@@ -6,6 +6,7 @@ import com.az7car.watchcat.detection.base.CheckResult;
 import com.az7car.watchcat.detection.base.PlayerData;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 
@@ -21,7 +22,7 @@ public class ESPCheck extends AbstractCheck {
 
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
-        var target = player.getTargetEntityExact(6);
+        Entity target = player.getTargetEntity(6);
         if (target == null) {
             espCount = Math.max(0, espCount - 1);
             return CheckResult.PASS;
@@ -32,7 +33,7 @@ public class ESPCheck extends AbstractCheck {
             0, 6);
         int wallCount = 0;
         while (blocks.hasNext()) {
-            var block = blocks.next().getBlock();
+            var block = blocks.next();
             if (block.getType().isOccluding()) wallCount++;
         }
         if (wallCount > 1) {

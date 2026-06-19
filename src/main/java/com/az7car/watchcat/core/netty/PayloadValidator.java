@@ -1,7 +1,7 @@
 package com.az7car.watchcat.core.netty;
 
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +31,9 @@ public class PayloadValidator {
         if (!(packet instanceof ServerboundCustomPayloadPacket payload)) return true;
         String channel;
         try {
-            channel = payload.getName();
+            Object p = payload.getClass().getMethod("payload").invoke(payload);
+            Object id = p.getClass().getMethod("type").invoke(p);
+            channel = id.toString();
         } catch (Exception e) {
             return true;
         }

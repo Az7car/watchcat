@@ -6,7 +6,7 @@ import com.az7car.watchcat.detection.base.CheckResult;
 import com.az7car.watchcat.detection.base.PlayerData;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
-import net.minecraft.network.protocol.game.ServerboundSetHeldSlotPacket;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -74,7 +74,7 @@ public class AutoToolCheck extends AbstractCheck {
 
     @Override
     public CheckResult processSync(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
-        if (packet instanceof ServerboundSetHeldSlotPacket held) {
+        if (packet instanceof ServerboundSetCarriedItemPacket held) {
             lastHeldSlot = held.getSlot();
             return CheckResult.PASS;
         }
@@ -106,7 +106,7 @@ public class AutoToolCheck extends AbstractCheck {
 
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
-        if (packet instanceof ServerboundSetHeldSlotPacket held) {
+        if (packet instanceof ServerboundSetCarriedItemPacket held) {
             lastHeldSlot = held.getSlot();
             return CheckResult.PASS;
         }

@@ -23,8 +23,8 @@ public class CollisionCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
-        double dx = data.getPositionDelta().getX();
-        double dz = data.getPositionDelta().getZ();
+        double dx = data.getDeltaX();
+        double dz = data.getDeltaZ();
         double dh = Math.sqrt(dx * dx + dz * dz);
 
         if (dh > 0.1) {

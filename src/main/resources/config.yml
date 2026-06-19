@@ -326,6 +326,10 @@ checks:
       enabled: true
       severity: low
       weight: 0.4
+    autoleave:
+      enabled: true
+      severity: low
+      weight: 0.35
 
   movement:
     speed:
@@ -564,6 +568,10 @@ checks:
       enabled: true
       severity: low
       weight: 0.5
+    autowalk:
+      enabled: true
+      severity: low
+      weight: 0.35
 
   world:
     scaffold:
@@ -728,6 +736,14 @@ checks:
       severity: low
       weight: 0.35
     autosmithing:
+      enabled: true
+      severity: low
+      weight: 0.35
+    pickrange:
+      enabled: true
+      severity: low
+      weight: 0.4
+    exppickup:
       enabled: true
       severity: low
       weight: 0.35
@@ -957,6 +973,34 @@ checks:
       enabled: true
       severity: low
       weight: 0.45
+    bookexploit:
+      enabled: true
+      severity: high
+      weight: 0.9
+    noweather:
+      enabled: true
+      severity: low
+      weight: 0.3
+    antiwdl:
+      enabled: true
+      severity: medium
+      weight: 0.5
+    soundpos:
+      enabled: true
+      severity: medium
+      weight: 0.4
+    packetspam:
+      enabled: true
+      severity: low
+      weight: 0.4
+    antiresourcepack:
+      enabled: true
+      severity: low
+      weight: 0.35
+    nopotionlabel:
+      enabled: true
+      severity: low
+      weight: 0.25
 
 # ML configuration
 ml:

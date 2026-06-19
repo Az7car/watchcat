@@ -26,7 +26,7 @@ public class AntiLevitationCheck extends AbstractCheck {
         if (!player.hasPotionEffect(PotionEffectType.LEVITATION)) return CheckResult.PASS;
         if (move.isOnGround()) return CheckResult.PASS;
 
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
         if (dy < 0) {
             levitationBypassCount++;
             if (levitationBypassCount > 3) {

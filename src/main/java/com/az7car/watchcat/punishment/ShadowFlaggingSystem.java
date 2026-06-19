@@ -59,6 +59,8 @@ public class ShadowFlaggingSystem {
         return primarySeverity.getOrDefault(uuid, "medium");
     }
 
+    public int getTrackedPlayerCount() { return trackers.size(); }
+
     public void unload(UUID uuid) {
         trackers.remove(uuid);
         primaryCheats.remove(uuid);

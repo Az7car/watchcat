@@ -93,7 +93,7 @@ public class BanWaveExecutor {
         }.runTaskLater(plugin, delay / 50);
     }
 
-    private void executeWave() {
+    public void executeWave() {
         if (pendingBans.isEmpty() || waveInProgress) return;
         waveInProgress = true;
 

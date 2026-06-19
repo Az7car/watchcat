@@ -28,8 +28,8 @@ public class WaterSpeedCheck extends AbstractCheck {
         Material head = player.getEyeLocation().getBlock().getType();
         if (!head.name().contains("WATER")) return CheckResult.PASS;
 
-        double dx = data.getPositionDelta().getX();
-        double dz = data.getPositionDelta().getZ();
+        double dx = data.getDeltaX();
+        double dz = data.getDeltaZ();
         double dh = Math.sqrt(dx * dx + dz * dz);
 
         if (dh > maxWaterSpeed) {

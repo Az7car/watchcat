@@ -22,7 +22,7 @@ public class TracersCheck extends AbstractCheck {
 
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
-        var target = player.getTargetEntityExact(6);
+        var target = player.getTargetEntity(6);
         if (target == null) {
             tracersCount = Math.max(0, tracersCount - 1);
             return CheckResult.PASS;

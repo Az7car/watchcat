@@ -10,6 +10,8 @@ import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Field;
+
 public class ShieldBreakerCheck extends AbstractCheck {
 
     private final long perfectTimingThreshold;
@@ -22,10 +24,21 @@ public class ShieldBreakerCheck extends AbstractCheck {
         this.perfectTimingThreshold = (long) config.getCheckDouble("combat.shieldbreaker", "perfect-timing-threshold", 50);
     }
 
+    private static boolean isAttackAction(ServerboundInteractPacket interact) {
+        try {
+            Field field = ServerboundInteractPacket.class.getDeclaredField("action");
+            field.setAccessible(true);
+            Object action = field.get(interact);
+            return action != null && action.toString().equals("ATTACK");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     @Override
     public CheckResult processSync(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundInteractPacket interact)) return CheckResult.PASS;
-        if (interact.getAction() != ServerboundInteractPacket.Action.ATTACK) return CheckResult.PASS;
+        if (!isAttackAction(interact)) return CheckResult.PASS;
 
         Material hand = player.getInventory().getItemInMainHand().getType();
         if (!hand.name().endsWith("_AXE")) return CheckResult.PASS;
@@ -50,7 +63,7 @@ public class ShieldBreakerCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundInteractPacket interact)) return CheckResult.PASS;
-        if (interact.getAction() != ServerboundInteractPacket.Action.ATTACK) return CheckResult.PASS;
+        if (!isAttackAction(interact)) return CheckResult.PASS;
 
         Material hand = player.getInventory().getItemInMainHand().getType();
         if (!hand.name().endsWith("_AXE")) return CheckResult.PASS;
