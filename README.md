@@ -2,8 +2,8 @@
 
 Server-side anti-cheat for Paper 1.21.11. By @Az7car.
 
-Website: https://amethystcore.com/watchcat
-Discord: https://orvexsmp.net/discord
+Website: https://watchcat.gg
+Discord: https://discord.gg/2hPbabJ9jP
 
 ## Features
 
