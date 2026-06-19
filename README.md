@@ -7,65 +7,59 @@ Discord: https://orvexsmp.net/discord
 
 ## Features
 
-### Combat Detection (12 checks)
-- Killaura - GCD analysis, cinematic smoothing (R-squared), constellation tracking
-- AimAssist - vertical lock deviation, pitch smoothing curves
-- Reach - 3D ray-AABB intersection, distance validation
-- Hitbox - expanded bounding box detection via ray intersection
-- AutoClicker - CPS limits, interval standard deviation
-- Triggerbot - click timing coefficient of variation
-- Velocity/AntiKnockback - vertical velocity ratio vs expected knockback
-- Criticals - air tick count verification on attack
-- BowAimbot - yaw/pitch lock during bow charging
-- AutoShield - perfect block timing patterns
-- AutoTotem - inventory swap interval analysis
+### Combat Detection (53 checks)
+- Killaura, AimAssist, Reach, Hitbox, AutoClicker, Triggerbot
+- Velocity, AntiKnockback, Criticals, BowAimbot, AutoShield
+- AutoTotem, AutoArmor, FastBow, MultiAura, ShieldBreaker
+- MaceSwitch, NoSlow, FastEat, FastHeal, KeepSprint
+- AimLock, Regen, SuperKnockback, WTap, Backtrack
+- PitchLimit, NoMiss, InvisibleAim, ReachMulti, CPSLimit
+- Delay, AutoBlock, Combo, DoubleHit, PerfectBlock
+- ShieldBlock, AutoWeapon, AutoPot, AutoPearl
+- ReachOverride, HitBoxOverride, NoHurtCam, AntiWeakness
+- AntiHunger, NoFire, NoPush, SmoothAim, RageAura
+- ClickPattern, TickShift, AutoSoup, AutoLeave
 
-### Movement Detection (19 checks)
-- Speed - 3D momentum + friction per tick
-- Fly - gravitational constant validation, vertical velocity profiling
-- NoFall - fall distance vs ground-state mismatch
-- Step - Y delta vs step height limit
-- Jesus - water/lava surface movement speed
-- Spider - wall climb acceleration
-- Glide - descent rate vs air ticks
-- HighJump - initial jump velocity
-- BunnyHop - air-to-ground speed ratio
-- FastLadder - ladder climbing speed
-- Phase - solid block penetration
-- Blink - position delta vs time gap
-- LongJump - horizontal velocity cap
-- ElytraFly - elytra speed limit
-- BoatFly - vehicle vertical movement
-- NoWeb - speed reduction in cobwebs
-- Strafe - air acceleration ratio
-- SafeWalk - edge detection without sneaking
-- EntitySpeed - ridden entity speed caps
+### Movement Detection (44 checks)
+- Speed, Fly, NoFall, Step, Jesus, Spider, Glide, HighJump
+- BunnyHop, FastLadder, Phase, Blink, LongJump, ElytraFly
+- BoatFly, NoWeb, Strafe, SafeWalk, EntitySpeed, Derp
+- AntiVoid, Motion, Gravity, AirJump, FastFall, Collision
+- Prediction, TimerBalance, TimerAccel, Swim, Ascension
+- JumpCheck, VehicleSpeed, IceSpeed, SlimeBlock, WaterSpeed
+- LavaSpeed, WallClimb, Clip, YPort, SpeedLimit
+- AntiLevitation, DolphinJump, Sneak, PingSpoof, PacketDelay
+- NoDrag, NoJumpDelay, SpeedField, EnderPearl, AutoWalk
 
-### World Detection (13 checks)
-- Scaffold - eye-vector vs block-face angle
-- FastPlace - click interval variance
-- InventoryMove - movement packets with GUI open
-- FastBreak - block break timing
-- Nuker - concurrent break rate
-- AirPlace - block placement without adjacent face
-- Tower - vertical placement + movement sync
-- ChestStealer - inventory transaction rate
-- BuildReach - block placement distance
-- NoSwing - interaction without animation
-- AutoFarm - crop harvest timing patterns
-- AutoFish - fishing rod reuse intervals
-- AutoMine - instant block target lock
+### World Detection (34 checks)
+- Scaffold, FastPlace, InventoryMove, FastBreak, Nuker
+- AirPlace, Tower, ChestStealer, BuildReach, NoSwing
+- AutoFarm, AutoFish, AutoMine, InventoryActions, AutoTool
+- BlockInteraction, FastConsume, GhostBlock, RotationPlace
+- InstantMine, MultiTask, Direction, PacketOrder, RotationBreak
+- BreakPattern, ChestAura, AutoRespawn, FastDoor, Surround
+- PistonPush, AutoSign, AutoDoor, AutoBrew, AutoEnchant
+- AutoAnvil, BoatGlitch, ContainerSort, AutoSmithing
+- PickRange, ExpPickup
 
-### Mod & Injector Detection (6 checks)
-- BrandDetector - minecraft:brand analysis, blocked client list
-- PayloadProber - crafted payload injection, response analysis
-- TickTimerAnalyzer - packet timing statistical analysis
-- BadPackets - NaN/Infinity validation, self-attack detection
-- Freecam - air movement without vertical change
-- AntiAFK - periodic rotation without movement
+### Mod & Injector Detection (87 checks)
+- BrandDetector, PayloadProber, TickTimerAnalyzer, BadPackets
+- Freecam, AntiAFK, Timer, MorePackets, InvalidInteract
+- Disabler, SkinBlinker, SpinBot, HeadRoll, NoRotateSet
+- Flight, AntiSwear, AntiFlood, AntiAd, Aimbot, GroundSpoof
+- XRay, Baritone, AutoCrystal, AntiAntiXRay, OreBot
+- NoRender, Trajectory, ClickTP, AntiInvis, Proxy
+- AntiAntiCheat, ScreenShare, PluginDetector, ClientSpoof
+- PacketMani, ForceOP, NoPitchLimit, AntiFirework
+- ResourceSpoof, NameSpoof, NoAttackCooldown, AntiCactus
+- AntiBerry, NoPortalOverlay, NoPumpkin, NoFireOverlay
+- AntiFog, NoScoreboard, AntiPotion, CrashPayload, ESP
+- Tracers, NoFov, NoBob, AntiBlind, TimeSpoof, AntiShield
+- BookExploit, NoWeather, AntiWDL, SoundPos, PacketSpam
+- AntiResourcePack, NoPotionLabel, AntiBot, Raid
 
 ### Machine Learning Brain
-- 16-dimension feature vector extraction (rotation deltas, GCD, click variance, acceleration, packet rate)
+- 32-dimension feature vector (rotation deltas, GCD, click variance, acceleration, packet rate, velocity std/mean/trend, pitch entropy, convergence)
 - ONNX Runtime inference (in-JVM, no external dependencies)
 - Isolation Forest anomaly detection blending with heuristic scores
 - CSV training data export for offline model training
@@ -84,6 +78,7 @@ Discord: https://orvexsmp.net/discord
 - Fully asynchronous check execution (off-main-thread)
 - 100% reflection-based, no Mojang-mapped dependencies
 - Maven build, Java 21, Paper 1.21.11
+- 218 checks total | 265+ Java files
 
 ## Building
 
@@ -101,9 +96,17 @@ Edit `config.yml` in the plugin data folder. Each check has:
 - `weight` - contribution to confidence score
 - Check-specific thresholds
 
-## Ban Wave System
+## Commands
 
-When a player's confidence score reaches the confirm threshold (default 0.95), they are added to the pending ban queue. Bans execute in randomized waves with jittered timing and severity-scaled duration. Each player receives a unique appeal code.
+- `/watchcat alerts` - toggle alert messages
+- `/watchcat stats` - check performance statistics
+- `/watchcat profile <player>` - detailed flag history
+- `/watchcat checks` - list all checks with status
+- `/watchcat player <player>` - per-player check state
+- `/watchcat reload` - reload configuration
+- `/watchcat whitelist <add|remove|list> <player>` - exemption management
+- `/watchcat report <player>` - report a player
+- `/watchcat banwave` - trigger manual ban wave
 
 ## Dependencies
 
