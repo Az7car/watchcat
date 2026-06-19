@@ -1,0 +1,900 @@
+# ============================================================
+# Watchcat (by @Az7car) - Enterprise Anti-Cheat Configuration
+# ============================================================
+
+# Discord server for appeals
+discord:
+  invite-link: "https://orvexsmp.net/discord"
+  server-name: "OrvexSMP"
+
+# Ban-wave configuration
+ban-wave:
+  enabled: false
+  instant-ban: true
+  min-delay-minutes: 30
+  max-delay-minutes: 360
+  jitter-seconds: 300
+  notify-staff: true
+  broadcast: false
+  confirm-threshold: 0.8
+
+# Chat moderation
+chat:
+  max-messages-per-second: 4
+  max-repeated-messages: 3
+  max-caps-ratio: 50
+  max-warnings-before-ban: 3
+  mute-duration-seconds: 120
+  temp-ban-duration-seconds: 3600
+  warning-decay-seconds: 300
+  block-ip-addresses: true
+  block-domains: true
+  block-invites: true
+
+# Anti-bot / Anti-raid
+antibot:
+  max-joins-per-minute: 5
+  min-name-length: 2
+  max-name-length: 16
+
+raid:
+  max-players-per-ip: 3
+  max-similar-names: 4
+  window-seconds: 60
+  auto-ban: true
+
+# Punishment severity tiers (duration in days)
+# Multiplier applied per offense count: 1st=1x, 2nd=2x, 3rd=4x, 4th+=permanent
+punishment:
+  severity:
+    critical:
+      base-duration-days: 365
+      display: "§4CRITICAL"
+    high:
+      base-duration-days: 180
+      display: "§cHIGH"
+    medium:
+      base-duration-days: 90
+      display: "§eMEDIUM"
+    low:
+      base-duration-days: 30
+      display: "§aLOW"
+  offense-multiplier:
+    "1": 1.0
+    "2": 2.0
+    "3": 4.0
+  ip-ban: true
+  offense-storage-file: "offenses.yml"
+
+# Appeal code settings
+appeal:
+  enabled: true
+  code-length: 7
+  characters: "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+  storage-file: "appeals.yml"
+
+# Global performance settings
+performance:
+  async-threads: 4
+  packet-queue-size: 1024
+  enable-ml: true
+  debug-mode: false
+
+# Per-check configuration
+# severity: critical | high | medium | low
+checks:
+  combat:
+    killaura:
+      enabled: true
+      severity: critical
+      gcd-threshold: 0.008
+      cinematic-r2-threshold: 0.92
+      constellation-threshold: 0.75
+      weight: 1.0
+    aimassist:
+      enabled: true
+      severity: high
+      r2-threshold: 0.90
+      vertical-lock-deviation: 0.5
+      weight: 0.9
+    reach:
+      enabled: true
+      severity: critical
+      max-reach: 3.2
+      buffer: 0.15
+      weight: 1.0
+    hitbox:
+      enabled: true
+      severity: critical
+      max-expansion: 0.1
+      weight: 0.8
+    autoclicker:
+      enabled: true
+      severity: medium
+      max-cps: 18
+      cps-std-dev-threshold: 0.5
+      weight: 0.7
+    triggerbot:
+      enabled: true
+      severity: medium
+      perfect-timing-threshold: 0.01
+      weight: 0.6
+    velocity:
+      enabled: true
+      severity: medium
+      min-expected-ratio: 0.6
+      weight: 0.9
+    criticals:
+      enabled: true
+      severity: high
+      min-air-ticks: 3
+      weight: 0.7
+    bowaimbot:
+      enabled: true
+      severity: high
+      aim-lock-deviation: 0.1
+      weight: 0.6
+    antiknockback:
+      enabled: true
+      severity: medium
+      min-vertical-velocity: 0.2
+      weight: 0.8
+    autoshield:
+      enabled: true
+      severity: low
+      perfect-block-threshold: 0.02
+      weight: 0.5
+    autototem:
+      enabled: true
+      severity: low
+      min-swap-time: 50
+      weight: 0.5
+    autoarmor:
+      enabled: true
+      severity: medium
+      min-equip-time: 50
+      weight: 0.5
+    fastbow:
+      enabled: true
+      severity: medium
+      min-draw-time: 300
+      weight: 0.6
+    multiaura:
+      enabled: true
+      severity: high
+      max-targets-per-tick: 1
+      weight: 0.7
+    shieldbreaker:
+      enabled: true
+      severity: medium
+      perfect-timing-threshold: 50
+      weight: 0.7
+    maceswitch:
+      enabled: true
+      severity: medium
+      required-fall-distance: 1.5
+      switch-window: 100
+      weight: 0.7
+    noslow:
+      enabled: true
+      severity: medium
+      max-sprint-speed: 0.15
+      weight: 0.6
+    fasteat:
+      enabled: true
+      severity: low
+      min-eat-time: 1000
+      weight: 0.5
+    fastheal:
+      enabled: true
+      severity: low
+      min-heal-interval: 500
+      weight: 0.5
+    keepsprint:
+      enabled: true
+      severity: low
+      max-sprint-speed: 0.6
+      weight: 0.5
+    aimlock:
+      enabled: true
+      severity: high
+      lock-threshold: 20
+      weight: 0.7
+    regen:
+      enabled: true
+      severity: medium
+      min-regen-interval: 1000
+      weight: 0.65
+    superknockback:
+      enabled: true
+      severity: medium
+      max-kb-velocity: 0.8
+      weight: 0.6
+    wtap:
+      enabled: true
+      severity: low
+      max-wtap-window: 100
+      weight: 0.5
+    backtrack:
+      enabled: true
+      severity: high
+      weight: 0.7
+    pitchlimit:
+      enabled: true
+      severity: medium
+      weight: 0.5
+    nomiss:
+      enabled: true
+      severity: medium
+      hit-threshold: 50
+      weight: 0.6
+    invisibleaim:
+      enabled: true
+      severity: high
+      weight: 0.7
+    reachmulti:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    cpslimit:
+      enabled: true
+      severity: medium
+      max-cps-limit: 25
+      weight: 0.5
+    delay:
+      enabled: true
+      severity: low
+      weight: 0.5
+    autoblock:
+      enabled: true
+      severity: low
+      weight: 0.5
+    combo:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    doublehit:
+      enabled: true
+      severity: medium
+      weight: 0.55
+    perfectblock:
+      enabled: true
+      severity: low
+      weight: 0.5
+    shieldblock:
+      enabled: true
+      severity: low
+      weight: 0.5
+    autoweapon:
+      enabled: true
+      severity: low
+      weight: 0.5
+    autopot:
+      enabled: true
+      severity: low
+      weight: 0.5
+    autopearl:
+      enabled: true
+      severity: low
+      weight: 0.5
+    reachoverride:
+      enabled: true
+      severity: high
+      max-reach: 4.0
+      weight: 0.7
+    hitboxoverride:
+      enabled: true
+      severity: high
+      weight: 0.65
+    nohurtcam:
+      enabled: true
+      severity: low
+      weight: 0.45
+    antiweakness:
+      enabled: true
+      severity: low
+      weight: 0.5
+    antihunger:
+      enabled: true
+      severity: low
+      weight: 0.4
+    nofire:
+      enabled: true
+      severity: low
+      weight: 0.4
+    nopush:
+      enabled: true
+      severity: low
+      weight: 0.45
+
+  movement:
+    speed:
+      enabled: true
+      severity: high
+      max-horizontal-speed: 0.65
+      weight: 1.0
+    fly:
+      enabled: true
+      severity: critical
+      max-vertical-velocity: 0.5
+      weight: 1.0
+    nofall:
+      enabled: true
+      severity: high
+      max-fall-distance: 3.0
+      weight: 0.9
+    step:
+      enabled: true
+      severity: medium
+      max-step-height: 0.6
+      weight: 0.7
+    jesus:
+      enabled: true
+      severity: medium
+      max-water-speed: 0.12
+      weight: 0.8
+    spider:
+      enabled: true
+      severity: medium
+      max-climb-speed: 0.2
+      weight: 0.7
+    glide:
+      enabled: true
+      severity: low
+      min-descent-rate: 0.03
+      weight: 0.6
+    highjump:
+      enabled: true
+      severity: medium
+      max-jump-velocity: 0.55
+      weight: 0.7
+    bunnyhop:
+      enabled: true
+      severity: low
+      max-hop-ratio: 1.5
+      weight: 0.6
+    fastladder:
+      enabled: true
+      severity: low
+      max-ladder-speed: 0.15
+      weight: 0.6
+    phase:
+      enabled: true
+      severity: critical
+      block-penetration-tolerance: 0.001
+      weight: 1.0
+    blink:
+      enabled: true
+      severity: high
+      max-position-delay-ms: 500
+      weight: 0.7
+    longjump:
+      enabled: true
+      severity: medium
+      max-horizontal-delta: 0.7
+      weight: 0.6
+    elytrafly:
+      enabled: true
+      severity: high
+      max-elytra-speed: 2.0
+      weight: 0.7
+    boatfly:
+      enabled: true
+      severity: medium
+      max-boat-speed: 0.6
+      weight: 0.6
+    noweb:
+      enabled: true
+      severity: low
+      min-web-speed-reduction: 0.2
+      weight: 0.5
+    strafe:
+      enabled: true
+      severity: low
+      max-direction-change-speed: 0.6
+      weight: 0.5
+    safewalk:
+      enabled: true
+      severity: low
+      weight: 0.3
+    entityspeed:
+      enabled: true
+      severity: medium
+      weight: 0.5
+    derp:
+      enabled: true
+      severity: low
+      max-derp-ticks: 5
+      weight: 0.6
+    antivoid:
+      enabled: true
+      severity: high
+      void-threshold: -32
+      weight: 0.7
+    motion:
+      enabled: true
+      severity: medium
+      max-acceleration: 0.05
+      weight: 0.7
+    gravity:
+      enabled: true
+      severity: medium
+      min-gravity: 0.08
+      max-gravity: 0.12
+      weight: 0.65
+    airjump:
+      enabled: true
+      severity: medium
+      max-air-jumps: 2
+      weight: 0.6
+    fastfall:
+      enabled: true
+      severity: medium
+      max-fall-speed: 0.08
+      weight: 0.6
+    collision:
+      enabled: true
+      severity: high
+      weight: 0.65
+    prediction:
+      enabled: true
+      severity: medium
+      weight: 0.65
+    timerbalance:
+      enabled: true
+      severity: high
+      max-balance: 100.0
+      weight: 0.65
+    timeraccel:
+      enabled: true
+      severity: medium
+      min-interval: 1
+      weight: 0.6
+    swim:
+      enabled: true
+      severity: low
+      max-swim-speed: 0.08
+      weight: 0.5
+    ascension:
+      enabled: true
+      severity: medium
+      max-speed: 0.6
+      max-accel: 0.05
+      weight: 0.65
+    jumpcheck:
+      enabled: true
+      severity: low
+      max-velocity: 0.42
+      weight: 0.55
+    vehiclespeed:
+      enabled: true
+      severity: low
+      max-speed: 1.5
+      weight: 0.5
+    icespeed:
+      enabled: true
+      severity: low
+      max-speed: 0.8
+      weight: 0.55
+    slimeblock:
+      enabled: true
+      severity: low
+      max-bounce: 0.6
+      weight: 0.5
+    waterspeed:
+      enabled: true
+      severity: low
+      max-speed: 0.15
+      weight: 0.55
+    lavaspeed:
+      enabled: true
+      severity: low
+      max-speed: 0.1
+      weight: 0.55
+    wallclimb:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    clip:
+      enabled: true
+      severity: high
+      weight: 0.7
+    yport:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    speedlimit:
+      enabled: true
+      severity: high
+      absolute-max: 2.0
+      weight: 0.7
+    antilevitation:
+      enabled: true
+      severity: low
+      weight: 0.5
+    dolphinjump:
+      enabled: true
+      severity: low
+      weight: 0.5
+    sneak:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    pingspoof:
+      enabled: true
+      severity: low
+      weight: 0.5
+    packetdelay:
+      enabled: true
+      severity: low
+      weight: 0.5
+    nodrag:
+      enabled: true
+      severity: low
+      weight: 0.5
+    nojumpdelay:
+      enabled: true
+      severity: low
+      weight: 0.45
+
+  world:
+    scaffold:
+      enabled: true
+      severity: high
+      max-angle-deviation: 15.0
+      weight: 0.9
+    fastplace:
+      enabled: true
+      severity: low
+      min-place-interval-variance: 0.005
+      weight: 0.7
+    inventorymove:
+      enabled: true
+      severity: low
+      weight: 0.8
+    fastbreak:
+      enabled: true
+      severity: medium
+      max-break-speed: 0.5
+      weight: 0.8
+    nuker:
+      enabled: true
+      severity: critical
+      max-blocks-per-second: 8
+      weight: 0.9
+    airplace:
+      enabled: true
+      severity: medium
+      weight: 0.7
+    tower:
+      enabled: true
+      severity: high
+      max-tower-speed: 0.8
+      weight: 0.8
+    cheststealer:
+      enabled: true
+      severity: low
+      max-steal-cps: 4
+      weight: 0.6
+    buildreach:
+      enabled: true
+      severity: high
+      max-build-reach: 5.5
+      weight: 0.8
+    noswing:
+      enabled: true
+      severity: low
+      weight: 0.4
+    autofarm:
+      enabled: true
+      severity: low
+      weight: 0.5
+    autofish:
+      enabled: true
+      severity: low
+      weight: 0.4
+    automine:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    inventoryactions:
+      enabled: true
+      severity: medium
+      max-actions-per-second: 15
+      weight: 0.5
+    autotool:
+      enabled: true
+      severity: medium
+      max-switch-time: 50
+      weight: 0.6
+    blockinteraction:
+      enabled: true
+      severity: high
+      max-distance: 6.0
+      weight: 0.6
+    fastconsume:
+      enabled: true
+      severity: low
+      min-consume-time: 1500
+      weight: 0.5
+    ghostblock:
+      enabled: true
+      severity: medium
+      weight: 0.65
+    rotationplace:
+      enabled: true
+      severity: low
+      min-pitch: 80.0
+      weight: 0.5
+    instantmine:
+      enabled: true
+      severity: high
+      min-break-ms: 200
+      weight: 0.7
+    multitask:
+      enabled: true
+      severity: low
+      weight: 0.5
+    direction:
+      enabled: true
+      severity: low
+      weight: 0.5
+    packetorder:
+      enabled: true
+      severity: low
+      weight: 0.5
+    rotationbreak:
+      enabled: true
+      severity: low
+      weight: 0.5
+    breakpattern:
+      enabled: true
+      severity: low
+      weight: 0.5
+    chestaura:
+      enabled: true
+      severity: medium
+      weight: 0.55
+    autorespawn:
+      enabled: true
+      severity: low
+      weight: 0.3
+    fastdoor:
+      enabled: true
+      severity: low
+      weight: 0.4
+    surround:
+      enabled: true
+      severity: high
+      weight: 0.65
+    pistonpush:
+      enabled: true
+      severity: low
+      weight: 0.4
+    autosign:
+      enabled: true
+      severity: low
+      weight: 0.4
+    autodoor:
+      enabled: true
+      severity: low
+      weight: 0.35
+    autobrew:
+      enabled: true
+      severity: low
+      weight: 0.35
+    autoenchant:
+      enabled: true
+      severity: low
+      weight: 0.35
+    autoanvil:
+      enabled: true
+      severity: low
+      weight: 0.35
+
+  mod:
+    brand:
+      enabled: true
+      severity: low
+      weight: 0.5
+    payload:
+      enabled: true
+      severity: medium
+      probe-interval-ticks: 200
+      weight: 0.5
+    badpackets:
+      enabled: true
+      severity: high
+      weight: 0.6
+    freecam:
+      enabled: true
+      severity: high
+      weight: 0.6
+    antiafk:
+      enabled: true
+      severity: low
+      weight: 0.3
+    timer:
+      enabled: true
+      severity: high
+      max-packets-per-tick: 1.5
+      packet-window: 20
+      weight: 0.7
+    morepackets:
+      enabled: true
+      severity: medium
+      max-packets-per-second: 30
+      packet-window: 40
+      weight: 0.6
+    invalidinteract:
+      enabled: true
+      severity: medium
+      weight: 0.5
+    disabler:
+      enabled: true
+      severity: critical
+      weight: 0.8
+    skinblinker:
+      enabled: true
+      severity: low
+      max-toggles-per-second: 3
+      weight: 0.5
+    spinbot:
+      enabled: true
+      severity: high
+      max-yaw-delta: 180
+      min-samples: 5
+      weight: 0.6
+    headroll:
+      enabled: true
+      severity: medium
+      max-pitch-change: 5.0
+      weight: 0.5
+    norotateset:
+      enabled: true
+      severity: high
+      weight: 0.7
+    flight:
+      enabled: true
+      severity: critical
+      hover-threshold: 0.01
+      hover-ticks: 10
+      max-vertical-accel: 0.005
+      weight: 0.8
+    antiswear:
+      enabled: true
+      severity: low
+      weight: 0.5
+    antiflood:
+      enabled: true
+      severity: low
+      weight: 0.5
+    antiad:
+      enabled: true
+      severity: medium
+      weight: 0.5
+    aimbot:
+      enabled: true
+      severity: high
+      perfect-aim-threshold: 15
+      smoothness-threshold: 30
+      weight: 0.75
+    groundspoof:
+      enabled: true
+      severity: medium
+      max-spoof-ticks: 20
+      weight: 0.6
+    xray:
+      enabled: true
+      severity: high
+      valuable-ratio-threshold: 20
+      sample-size: 200
+      weight: 0.7
+    baritone:
+      enabled: true
+      severity: high
+      weight: 0.65
+    autocrystal:
+      enabled: true
+      severity: high
+      perfect-cycle-threshold: 5
+      weight: 0.75
+    antiantixray:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    orebot:
+      enabled: true
+      severity: medium
+      max-chain-interval: 200
+      weight: 0.6
+    norender:
+      enabled: true
+      severity: low
+      min-distance: 0.1
+      weight: 0.5
+    trajectory:
+      enabled: true
+      severity: low
+      weight: 0.5
+    clicktp:
+      enabled: true
+      severity: high
+      weight: 0.7
+    antiinvis:
+      enabled: true
+      severity: medium
+      weight: 0.65
+    proxy:
+      enabled: true
+      severity: low
+      weight: 0.4
+    antiantiacheat:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    screenshare:
+      enabled: true
+      severity: low
+      weight: 0.4
+    plugindetector:
+      enabled: true
+      severity: low
+      weight: 0.3
+    clientspoof:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    packetmani:
+      enabled: true
+      severity: low
+      weight: 0.5
+    forceop:
+      enabled: true
+      severity: critical
+      weight: 0.8
+    nopitchlimit:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    antifirework:
+      enabled: true
+      severity: low
+      weight: 0.5
+    resourcespoof:
+      enabled: true
+      severity: low
+      weight: 0.4
+    namespoof:
+      enabled: true
+      severity: low
+      weight: 0.4
+    noattackcooldown:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    anticactus:
+      enabled: true
+      severity: low
+      weight: 0.4
+    antiberry:
+      enabled: true
+      severity: low
+      weight: 0.4
+    noportaloverlay:
+      enabled: true
+      severity: low
+      weight: 0.35
+    nopumpkin:
+      enabled: true
+      severity: low
+      weight: 0.35
+
+# ML configuration
+ml:
+  enabled: true
+  model-path: "model/isolation_forest.onnx"
+  inference-interval-ticks: 20
+  heuristic-weight: 0.5
+  ml-weight: 0.5
+  feature-count: 16

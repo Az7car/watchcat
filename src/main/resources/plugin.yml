@@ -1,0 +1,43 @@
+name: Watchcat
+version: '1.0.0'
+main: com.az7car.watchcat.WatchcatPlugin
+description: Enterprise-grade anti-cheat by @Az7car
+author: '@Az7car'
+website: https://orvexsmp.net/discord
+api-version: '1.21'
+load: POSTWORLD
+
+permissions:
+  watchcat.alerts:
+    description: Receive anti-cheat alerts
+    default: op
+  watchcat.bypass:
+    description: Bypass Watchcat checks
+    default: false
+  watchcat.reload:
+    description: Reload Watchcat configuration
+    default: op
+  watchcat.debug:
+    description: View debug information
+    default: op
+  watchcat.stats:
+    description: View Watchcat statistics
+    default: op
+  watchcat.whitelist:
+    description: Whitelist players from checks
+    default: op
+  watchcat.report:
+    description: Report false positives
+    default: op
+  watchcat.banwave:
+    description: Execute ban wave
+    default: op
+  watchcat.profile:
+    description: View check profiling data
+    default: op
+
+commands:
+  watchcat:
+    description: Watchcat anti-cheat command
+    usage: /<command> <subcommand>
+    aliases: [wc, wcat]
