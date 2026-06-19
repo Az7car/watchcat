@@ -24,8 +24,8 @@ public class SpeedLimitCheck extends AbstractCheck {
     @Override
     public CheckResult processSync(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket)) return CheckResult.PASS;
-        double dx = data.getPositionDelta().getX();
-        double dz = data.getPositionDelta().getZ();
+        double dx = data.getDeltaX();
+        double dz = data.getDeltaZ();
         double dh = Math.sqrt(dx * dx + dz * dz);
         if (dh > absoluteMaxSpeed + 2.0 && !player.isInsideVehicle()) {
             return CheckResult.CANCELLED;
@@ -37,8 +37,8 @@ public class SpeedLimitCheck extends AbstractCheck {
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket)) return CheckResult.PASS;
         if (player.isInsideVehicle() || player.isFlying()) return CheckResult.PASS;
-        double dx = data.getPositionDelta().getX();
-        double dz = data.getPositionDelta().getZ();
+        double dx = data.getDeltaX();
+        double dz = data.getDeltaZ();
         double dh = Math.sqrt(dx * dx + dz * dz);
         if (dh > absoluteMaxSpeed) {
             speedLimitCount++;

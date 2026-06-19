@@ -28,7 +28,7 @@ public class SlimeBlockCheck extends AbstractCheck {
         Material below = player.getLocation().subtract(0, 0.1, 0).getBlock().getType();
         if (below != Material.SLIME_BLOCK) return CheckResult.PASS;
 
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
         if (dy > 0) return CheckResult.PASS;
 
         double bounce = Math.abs(dy);

@@ -7,6 +7,7 @@ import com.az7car.watchcat.detection.base.PlayerData;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.BlockHitResult;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -18,17 +19,25 @@ public class AirPlaceCheck extends AbstractCheck {
             config.isCheckEnabled("world.airplace"));
     }
 
+    private static BlockHitResult getHitResult(ServerboundUseItemOnPacket pkt) {
+        try {
+            return (BlockHitResult) pkt.getClass().getMethod("getHitResult").invoke(pkt);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     @Override
     public CheckResult processSync(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundUseItemOnPacket placePacket)) return CheckResult.PASS;
+        BlockHitResult hr = getHitResult(placePacket);
+        if (hr == null) return CheckResult.PASS;
         var block = player.getWorld().getBlockAt(
-            placePacket.getBlockPos().getX(),
-            placePacket.getBlockPos().getY(),
-            placePacket.getBlockPos().getZ());
+            hr.getBlockPos().getX(), hr.getBlockPos().getY(), hr.getBlockPos().getZ());
         var relative = player.getWorld().getBlockAt(
-            placePacket.getBlockPos().getX() + placePacket.getDirection().getStepX(),
-            placePacket.getBlockPos().getY() + placePacket.getDirection().getStepY(),
-            placePacket.getBlockPos().getZ() + placePacket.getDirection().getStepZ());
+            hr.getBlockPos().getX() + hr.getDirection().getStepX(),
+            hr.getBlockPos().getY() + hr.getDirection().getStepY(),
+            hr.getBlockPos().getZ() + hr.getDirection().getStepZ());
         if (block.isEmpty() && relative.isEmpty()) {
             return CheckResult.CANCELLED;
         }
@@ -38,31 +47,36 @@ public class AirPlaceCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundUseItemOnPacket placePacket)) return CheckResult.PASS;
+        BlockHitResult hr = getHitResult(placePacket);
+        if (hr == null) return CheckResult.PASS;
 
         Vector blockPos = new Vector(
-            placePacket.getBlockPos().getX(),
-            placePacket.getBlockPos().getY(),
-            placePacket.getBlockPos().getZ()
+            hr.getBlockPos().getX(), hr.getBlockPos().getY(), hr.getBlockPos().getZ()
         );
 
         Vector faceDir = new Vector(
-            placePacket.getHitVector().x,
-            placePacket.getHitVector().y,
-            placePacket.getHitVector().z
+            hr.getLocation().x, hr.getLocation().y, hr.getLocation().z
         );
 
         Vector adjacentBlock = blockPos.add(faceDir);
         var world = player.getWorld();
-        var adjType = world.getBlockAt(
-            (int)adjacentBlock.getX(),
-            (int)adjacentBlock.getY(),
-            (int)adjacentBlock.getZ()
-        ).getType();
+        var adjacent = world.getBlockAt(
+            (int) Math.floor(adjacentBlock.getX()),
+            (int) Math.floor(adjacentBlock.getY()),
+            (int) Math.floor(adjacentBlock.getZ()));
 
-        if (adjType == org.bukkit.Material.AIR) {
+        if (!adjacent.isEmpty() && !adjacent.isLiquid()) {
+            return CheckResult.PASS;
+        }
+
+        if (adjacent.isEmpty() && player.getLocation().distanceSquared(adjacent.getLocation()) < maxBuildDistance()) {
             return CheckResult.FLAG;
         }
 
         return CheckResult.PASS;
+    }
+
+    private double maxBuildDistance() {
+        return 6.0;
     }
 }

@@ -185,8 +185,8 @@ public class EnhancedFeatureVector {
     private double gcdSequenceStd(PlayerData data) {
         var rots = data.getRotationBuffer();
         if (rots.size() < 5) return 0;
-        double m = rots.stream().mapToDouble(r -> r.gcd).average().orElse(0);
-        return Math.sqrt(rots.stream().mapToDouble(r -> Math.pow(r.gcd - m, 2)).average().orElse(0));
+        double m = rots.stream().mapToDouble(r -> (double) r.deltaYaw()).average().orElse(0);
+        return Math.sqrt(rots.stream().mapToDouble(r -> Math.pow(r.deltaYaw() - m, 2)).average().orElse(0));
     }
 
     private double rotationConvergence(PlayerData data) {
@@ -195,7 +195,7 @@ public class EnhancedFeatureVector {
         var list = new ArrayList<>(rots);
         double total = 0;
         for (int i = 1; i < list.size(); i++) {
-            total += Math.abs(list.get(i).deltaPitch - list.get(i - 1).deltaPitch);
+            total += Math.abs(list.get(i).deltaPitch() - list.get(i - 1).deltaPitch());
         }
         return total / list.size();
     }

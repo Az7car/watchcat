@@ -26,8 +26,8 @@ public class VehicleSpeedCheck extends AbstractCheck {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
         if (!player.isInsideVehicle()) return CheckResult.PASS;
 
-        double dx = data.getPositionDelta().getX();
-        double dz = data.getPositionDelta().getZ();
+        double dx = data.getDeltaX();
+        double dz = data.getDeltaZ();
         double dh = Math.sqrt(dx * dx + dz * dz);
 
         if (dh > maxVehicleSpeed) {

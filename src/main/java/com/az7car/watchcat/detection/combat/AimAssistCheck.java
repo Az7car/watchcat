@@ -4,6 +4,7 @@ import com.az7car.watchcat.core.config.WatchcatConfig;
 import com.az7car.watchcat.core.pipeline.AbstractCheck;
 import com.az7car.watchcat.detection.base.CheckResult;
 import com.az7car.watchcat.detection.base.PlayerData;
+import com.az7car.watchcat.util.MathUtils;
 import com.az7car.watchcat.util.RotationUtils;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;

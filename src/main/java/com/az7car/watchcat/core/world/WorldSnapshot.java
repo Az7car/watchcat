@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
+import org.bukkit.craftbukkit.CraftWorld;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,11 +31,15 @@ public class WorldSnapshot {
     private static class ChunkData {
         final int x, z;
         final BlockState[] blocks;
+        final int minY;
+        final int height;
 
-        ChunkData(int x, int z, BlockState[] blocks) {
+        ChunkData(int x, int z, BlockState[] blocks, int minY, int height) {
             this.x = x;
             this.z = z;
             this.blocks = blocks;
+            this.minY = minY;
+            this.height = height;
         }
     }
 
@@ -44,21 +48,26 @@ public class WorldSnapshot {
         CraftWorld cw = (CraftWorld) world;
         var nmsWorld = cw.getHandle();
         Map<Long, ChunkData> chunkMap = new HashMap<>();
-        for (var chunk : nmsWorld.chunkSource().getChunks()) {
+        int maxY = world.getMaxHeight();
+        int minY = world.getMinHeight();
+        int range = maxY - minY;
+        for (org.bukkit.Chunk chunk : world.getLoadedChunks()) {
             if (chunk == null) continue;
-            int cx = chunk.getPos().x;
-            int cz = chunk.getPos().z;
-            BlockState[] states = new BlockState[16 * 16 * chunk.getHeight()];
+            int cx = chunk.getX();
+            int cz = chunk.getZ();
+            BlockState[] states = new BlockState[16 * 16 * range];
             int i = 0;
             for (int bx = 0; bx < 16; bx++) {
                 for (int bz = 0; bz < 16; bz++) {
-                    for (int by = chunk.getMinBuildHeight(); by < chunk.getMaxBuildHeight(); by++) {
-                        states[i++] = chunk.getBlockState(bx, by, bz);
+                    for (int by = minY; by < maxY; by++) {
+                        var bukkitBlock = chunk.getBlock(bx, by, bz);
+                        states[i] = ((org.bukkit.craftbukkit.block.CraftBlock) bukkitBlock).getNMS();
+                        i++;
                     }
                 }
             }
             long key2 = (long) cx << 32 | (cz & 0xFFFFFFFFL);
-            chunkMap.put(key2, new ChunkData(cx, cz, states));
+            chunkMap.put(key2, new ChunkData(cx, cz, states, minY, range));
         }
         snapshots.compute(key, (k, old) -> {
             if (old != null && !old.get().isStale()) return old;
@@ -77,10 +86,7 @@ public class WorldSnapshot {
         long ck = (long) cx << 32 | (cz & 0xFFFFFFFFL);
         ChunkData cd = s.chunks.get(ck);
         if (cd == null) return null;
-        CraftWorld cw = (CraftWorld) world;
-        int maxY = cw.getHandle().getMaxBuildHeight();
-        int minY = cw.getHandle().getMinBuildHeight();
-        int idx = (x & 15) * 16 * (maxY - minY) + (z & 15) * (maxY - minY) + (y - minY);
+        int idx = (x & 15) * 16 * cd.height + (z & 15) * cd.height + (y - cd.minY);
         if (idx < 0 || idx >= cd.blocks.length) return null;
         return cd.blocks[idx];
     }
@@ -96,10 +102,7 @@ public class WorldSnapshot {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
                     BlockState bs = getBlockState(world, x, y, z);
-                    if (bs != null && !bs.isAir()) {
-                        var blockBox = bs.getCollisionShape(net.minecraft.world.level.Level.RANDOM, null);
-                        if (blockBox != null && !blockBox.isEmpty()) return true;
-                    }
+                    if (bs != null && !bs.isAir()) return true;
                 }
             }
         }

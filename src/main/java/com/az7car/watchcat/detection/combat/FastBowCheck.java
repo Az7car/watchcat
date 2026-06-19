@@ -6,6 +6,7 @@ import com.az7car.watchcat.detection.base.CheckResult;
 import com.az7car.watchcat.detection.base.PlayerData;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
+import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.entity.Player;
 
@@ -23,11 +24,16 @@ public class FastBowCheck extends AbstractCheck {
 
     @Override
     public CheckResult processSync(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
-        if (!(packet instanceof ServerboundPlayerCommandPacket command)) return CheckResult.PASS;
-        if (command.getAction() == ServerboundPlayerCommandPacket.Action.START_USE_ITEM) {
+        if (packet instanceof ServerboundUseItemPacket) {
             drawStartTime = System.currentTimeMillis();
         }
-        if (command.getAction() == ServerboundPlayerCommandPacket.Action.STOP_USE_ITEM) {
+        if (packet instanceof ServerboundPlayerCommandPacket command) {
+            try {
+                Object action = command.getClass().getMethod("getAction").invoke(command);
+                if (action != null && action.toString().equals("START_FALL_FLYING")) {
+                    return CheckResult.PASS;
+                }
+            } catch (Exception ignored) {}
             if (drawStartTime != null && player.getInventory().getItemInMainHand().getType()
                     == org.bukkit.Material.BOW) {
                 long drawTime = System.currentTimeMillis() - drawStartTime;
@@ -43,11 +49,16 @@ public class FastBowCheck extends AbstractCheck {
 
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
-        if (!(packet instanceof ServerboundPlayerCommandPacket command)) return CheckResult.PASS;
-        if (command.getAction() == ServerboundPlayerCommandPacket.Action.START_USE_ITEM) {
+        if (packet instanceof ServerboundUseItemPacket) {
             drawStartTime = System.currentTimeMillis();
         }
-        if (command.getAction() == ServerboundPlayerCommandPacket.Action.STOP_USE_ITEM) {
+        if (packet instanceof ServerboundPlayerCommandPacket command) {
+            try {
+                Object action = command.getClass().getMethod("getAction").invoke(command);
+                if (action != null && action.toString().equals("START_FALL_FLYING")) {
+                    return CheckResult.PASS;
+                }
+            } catch (Exception ignored) {}
             if (drawStartTime != null && player.getInventory().getItemInMainHand().getType()
                     == org.bukkit.Material.BOW) {
                 long drawTime = System.currentTimeMillis() - drawStartTime;

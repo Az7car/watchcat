@@ -79,6 +79,10 @@ public class WatchcatConfig {
         return config.getDouble("checks." + checkPath + ".weight", def);
     }
 
+    public int getCheckInt(String checkPath, String key, int def) {
+        return config.getInt("checks." + checkPath + "." + key, def);
+    }
+
     public String getCheckSeverity(String checkPath) {
         return config.getString("checks." + checkPath + ".severity", "medium");
     }

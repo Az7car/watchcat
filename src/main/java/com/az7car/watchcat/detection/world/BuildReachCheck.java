@@ -7,6 +7,7 @@ import com.az7car.watchcat.detection.base.PlayerData;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.BlockHitResult;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -26,9 +27,13 @@ public class BuildReachCheck extends AbstractCheck {
         if (!(packet instanceof ServerboundUseItemOnPacket placePacket)) return CheckResult.PASS;
 
         Location eye = player.getEyeLocation();
-        double blockX = placePacket.getBlockPos().getX();
-        double blockY = placePacket.getBlockPos().getY();
-        double blockZ = placePacket.getBlockPos().getZ();
+        double blockX, blockY, blockZ;
+        try {
+            BlockHitResult hr = (BlockHitResult) placePacket.getClass().getMethod("getHitResult").invoke(placePacket);
+            blockX = hr.getBlockPos().getX();
+            blockY = hr.getBlockPos().getY();
+            blockZ = hr.getBlockPos().getZ();
+        } catch (Exception e) { return CheckResult.PASS; }
 
         double distance = eye.distance(new Location(player.getWorld(), blockX + 0.5, blockY + 0.5, blockZ + 0.5));
 

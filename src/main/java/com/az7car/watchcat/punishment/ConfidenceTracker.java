@@ -2,7 +2,6 @@ package com.az7car.watchcat.punishment;
 
 public class ConfidenceTracker {
 
-    private final long uuid;
     private double confidence;
     private long lastUpdateTick;
     private static final double DECAY_PER_TICK = 0.995;

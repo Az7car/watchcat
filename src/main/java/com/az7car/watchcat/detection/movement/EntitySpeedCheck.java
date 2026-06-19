@@ -24,7 +24,7 @@ public class EntitySpeedCheck extends AbstractCheck {
         double maxSpeed = 0.6;
         if (vehicle instanceof Horse) maxSpeed = 0.45;
         else if (vehicle instanceof Pig) maxSpeed = 0.4;
-        else if (vehicle instanceof EntityMinecartAbstract) maxSpeed = 0.4;
+        else if (vehicle instanceof Minecart) maxSpeed = 0.4;
         else if (vehicle instanceof Boat) maxSpeed = 0.6;
 
         double horizontal = data.getHorizontalPositionDelta();

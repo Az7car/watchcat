@@ -37,4 +37,5 @@ public class CheckRegistry {
     public Collection<AbstractCheck> getWorldChecks() { return worldChecks; }
     public Collection<AbstractCheck> getModChecks() { return modChecks; }
     public Collection<AbstractCheck> getAllChecks() { return allChecks; }
+    public Collection<AbstractCheck> getChecks() { return allChecks; }
 }

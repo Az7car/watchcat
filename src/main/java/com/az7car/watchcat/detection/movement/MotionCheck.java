@@ -25,8 +25,8 @@ public class MotionCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
-        double dx = data.getPositionDelta().getX();
-        double dz = data.getPositionDelta().getZ();
+        double dx = data.getDeltaX();
+        double dz = data.getDeltaZ();
         double horizontal = Math.sqrt(dx * dx + dz * dz);
 
         if (lastHorizontalSpeed > 0 && !move.isOnGround()) {

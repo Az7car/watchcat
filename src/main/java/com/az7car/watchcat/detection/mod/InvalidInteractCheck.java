@@ -7,7 +7,10 @@ import com.az7car.watchcat.detection.base.PlayerData;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import org.bukkit.entity.Player;
+
+import java.lang.reflect.Field;
 
 public class InvalidInteractCheck extends AbstractCheck {
 
@@ -24,10 +27,20 @@ public class InvalidInteractCheck extends AbstractCheck {
         if (entityId < -1 || entityId == 0) {
             return CheckResult.CANCELLED;
         }
-        if (interact.getAction() == null) {
+        if (getActionObj(interact) == null) {
             return CheckResult.CANCELLED;
         }
         return CheckResult.PASS;
+    }
+
+    private static Object getActionObj(ServerboundInteractPacket interact) {
+        try {
+            Field field = ServerboundInteractPacket.class.getDeclaredField("action");
+            field.setAccessible(true);
+            return field.get(interact);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -37,10 +50,11 @@ public class InvalidInteractCheck extends AbstractCheck {
         if (entityId < -1 || entityId == 0) {
             return CheckResult.FLAG;
         }
-        if (interact.getAction() == null) {
+        if (getActionObj(interact) == null) {
             return CheckResult.FLAG;
         }
-        net.minecraft.world.entity.Entity target = nmsPlayer.serverLevel().getEntity(entityId);
+        Level level = nmsPlayer.level();
+        net.minecraft.world.entity.Entity target = level.getEntity(entityId);
         if (target == null && entityId != -1) {
             return CheckResult.FLAG;
         }

@@ -24,10 +24,10 @@ public class BaritoneCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
-        double dx = data.getPositionDelta().getX();
-        double dz = data.getPositionDelta().getZ();
+        double dx = data.getDeltaX();
+        double dz = data.getDeltaZ();
         double dh = Math.sqrt(dx * dx + dz * dz);
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
 
         if (dh > 0.1) {
             double angle = Math.toDegrees(Math.atan2(dz, dx));

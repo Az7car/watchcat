@@ -34,7 +34,7 @@ public class HitboxCheck extends AbstractCheck {
 
         try {
             int entityId = interactPacket.getEntityId();
-            net.minecraft.world.entity.Entity nmsTarget = nmsPlayer.serverLevel().getEntity(entityId);
+            net.minecraft.world.entity.Entity nmsTarget = nmsPlayer.level().getEntity(entityId);
             if (nmsTarget == null) return CheckResult.PASS;
 
             Vector eyePos = player.getEyeLocation().toVector();

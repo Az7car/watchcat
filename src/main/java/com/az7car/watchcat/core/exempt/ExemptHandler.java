@@ -3,7 +3,7 @@ package com.az7car.watchcat.core.exempt;
 import com.az7car.watchcat.core.config.WatchcatConfig;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetHealthPacket;
-import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Map;
@@ -26,7 +26,11 @@ public class ExemptHandler {
     public static void handleIncoming(ServerPlayer nmsPlayer, UUID playerId, Packet<?> packet, WatchcatConfig config) {
         if (packet instanceof ServerboundCustomPayloadPacket payload) {
             String channel;
-            try { channel = payload.getName(); } catch (Exception e) { return; }
+            try {
+                Object p = payload.getClass().getMethod("payload").invoke(payload);
+                Object id = p.getClass().getMethod("type").invoke(p);
+                channel = id.toString();
+            } catch (Exception e) { return; }
             if (channel != null && LEGIT_CHANNELS.contains(channel)) {
                 ExemptionSystem.exempt(playerId, ExemptionType.ALL, 5);
             }

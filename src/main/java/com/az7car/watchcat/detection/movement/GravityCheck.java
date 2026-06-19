@@ -29,15 +29,15 @@ public class GravityCheck extends AbstractCheck {
         if (move.isOnGround()) return CheckResult.PASS;
         if (player.isInsideVehicle() || player.isFlying()) return CheckResult.PASS;
 
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
         if (dy >= 0) return CheckResult.PASS;
 
         double gravity = Math.abs(dy);
-        if (data.isLastOnGround()) {
+        if (data.wasOnGround()) {
             return CheckResult.PASS;
         }
 
-        double prevDy = data.getLastPositionDelta().getY();
+        double prevDy = data.getLastDeltaY();
         if (prevDy >= 0 || Math.abs(prevDy) < 0.01) return CheckResult.PASS;
 
         double gravityChange = Math.abs(gravity - Math.abs(prevDy));

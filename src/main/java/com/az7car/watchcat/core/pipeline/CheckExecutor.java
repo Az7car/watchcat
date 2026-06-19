@@ -13,6 +13,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class CheckExecutor {
 
     private final FPDetector fpDetector;

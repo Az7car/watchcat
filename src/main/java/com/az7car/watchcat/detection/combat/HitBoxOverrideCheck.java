@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Entity;
+import org.bukkit.util.Vector;
 
 public class HitBoxOverrideCheck extends AbstractCheck {
 

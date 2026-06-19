@@ -4,6 +4,7 @@ import com.az7car.watchcat.core.config.WatchcatConfig;
 import com.az7car.watchcat.core.pipeline.AbstractCheck;
 import com.az7car.watchcat.detection.base.CheckResult;
 import com.az7car.watchcat.detection.base.PlayerData;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,14 +19,52 @@ public class AutoFarmCheck extends AbstractCheck {
             config.isCheckEnabled("world.autofarm", true));
     }
 
+    private static boolean isStartDestroyBlock(Object action) {
+        if (action == null) return false;
+        return action.toString().equals("START_DESTROY_BLOCK");
+    }
+
+    private static Object getAction(ServerboundPlayerActionPacket pkt) {
+        try {
+            var m = pkt.getClass().getMethod("getAction");
+            return m.invoke(pkt);
+        } catch (Exception e) {
+            try {
+                var f = pkt.getClass().getDeclaredField("action");
+                f.setAccessible(true);
+                return f.get(pkt);
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+    }
+
+    private static BlockPos getBlockPos(ServerboundPlayerActionPacket pkt) {
+        try {
+            var m = pkt.getClass().getMethod("getBlockPos");
+            return (BlockPos) m.invoke(pkt);
+        } catch (Exception e) {
+            try {
+                var f = pkt.getClass().getDeclaredField("pos");
+                f.setAccessible(true);
+                return (BlockPos) f.get(pkt);
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+    }
+
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundPlayerActionPacket actionPacket)) return CheckResult.PASS;
-        if (actionPacket.getAction() != ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK) return CheckResult.PASS;
+        Object action = getAction(actionPacket);
+        if (!isStartDestroyBlock(action)) return CheckResult.PASS;
 
-        int x = actionPacket.getBlockPos().getX();
-        int y = actionPacket.getBlockPos().getY();
-        int z = actionPacket.getBlockPos().getZ();
+        BlockPos pos = getBlockPos(actionPacket);
+        if (pos == null) return CheckResult.PASS;
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
         Material block = player.getWorld().getBlockAt(x, y, z).getType();
 
         if (isCrop(block)) {

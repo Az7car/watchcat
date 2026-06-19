@@ -26,8 +26,19 @@ public class AutoArmorCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundContainerClickPacket click)) return CheckResult.PASS;
-        ItemStack carried = click.getCarriedItem() != null
-            ? ItemStack.deserializeBytes(click.getCarriedItem().getValue()) : null;
+        ItemStack carried = null;
+        try {
+            Object item = click.getClass().getMethod("getCarriedItem").invoke(click);
+            if (item != null) {
+                Object tag = item.getClass().getMethod("getValue").invoke(item);
+                if (tag != null) {
+                    byte[] bytes = (byte[]) tag.getClass().getMethod("copy").invoke(tag);
+                    carried = ItemStack.deserializeBytes(bytes);
+                }
+            }
+        } catch (Exception e) {
+            carried = null;
+        }
         if (carried == null) return CheckResult.PASS;
         Material type = carried.getType();
         boolean isArmor = type.name().endsWith("_HELMET") || type.name().endsWith("_CHESTPLATE")

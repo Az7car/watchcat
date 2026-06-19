@@ -10,7 +10,6 @@
 
     <name>Watchcat</name>
     <description>Enterprise-grade anti-cheat for Paper 1.21.11</description>
-    <author>@Az7car</author>
 
     <properties>
         <java.version>21</java.version>
@@ -36,6 +35,12 @@
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>${paper.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-server</artifactId>
+            <version>1.21.11-R0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

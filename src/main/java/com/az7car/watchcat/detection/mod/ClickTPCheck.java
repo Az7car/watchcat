@@ -25,16 +25,18 @@ public class ClickTPCheck extends AbstractCheck {
     public CheckResult processSync(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
         double x = 0, z = 0;
-        if (move instanceof ServerboundMovePlayerPacket.Pos) {
-            x = ((ServerboundMovePlayerPacket.Pos) move).getX(0);
-            z = ((ServerboundMovePlayerPacket.Pos) move).getZ(0);
-        } else if (move instanceof ServerboundMovePlayerPacket.PosRot) {
-            x = ((ServerboundMovePlayerPacket.PosRot) move).getX(0);
-            z = ((ServerboundMovePlayerPacket.PosRot) move).getZ(0);
-        }
+        try {
+            if (move instanceof ServerboundMovePlayerPacket.Pos) {
+                x = (double) ((ServerboundMovePlayerPacket.Pos) move).getClass().getMethod("getX").invoke(move);
+                z = (double) ((ServerboundMovePlayerPacket.Pos) move).getClass().getMethod("getZ").invoke(move);
+            } else if (move instanceof ServerboundMovePlayerPacket.PosRot) {
+                x = (double) ((ServerboundMovePlayerPacket.PosRot) move).getClass().getMethod("getX").invoke(move);
+                z = (double) ((ServerboundMovePlayerPacket.PosRot) move).getClass().getMethod("getZ").invoke(move);
+            }
+        } catch (Exception e) { return CheckResult.PASS; }
         if (x == 0 && z == 0) return CheckResult.PASS;
 
-        if (data.getLastPositionDelta().getX() == 0 && data.getLastPositionDelta().getZ() == 0) {
+        if (data.getDeltaX() == 0 && data.getDeltaZ() == 0) {
             return CheckResult.PASS;
         }
 
@@ -61,13 +63,15 @@ public class ClickTPCheck extends AbstractCheck {
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
         double x = 0, z = 0;
-        if (move instanceof ServerboundMovePlayerPacket.Pos) {
-            x = ((ServerboundMovePlayerPacket.Pos) move).getX(0);
-            z = ((ServerboundMovePlayerPacket.Pos) move).getZ(0);
-        } else if (move instanceof ServerboundMovePlayerPacket.PosRot) {
-            x = ((ServerboundMovePlayerPacket.PosRot) move).getX(0);
-            z = ((ServerboundMovePlayerPacket.PosRot) move).getZ(0);
-        }
+        try {
+            if (move instanceof ServerboundMovePlayerPacket.Pos) {
+                x = (double) ((ServerboundMovePlayerPacket.Pos) move).getClass().getMethod("getX").invoke(move);
+                z = (double) ((ServerboundMovePlayerPacket.Pos) move).getClass().getMethod("getZ").invoke(move);
+            } else if (move instanceof ServerboundMovePlayerPacket.PosRot) {
+                x = (double) ((ServerboundMovePlayerPacket.PosRot) move).getClass().getMethod("getX").invoke(move);
+                z = (double) ((ServerboundMovePlayerPacket.PosRot) move).getClass().getMethod("getZ").invoke(move);
+            }
+        } catch (Exception e) { return CheckResult.PASS; }
         if (x == 0 && z == 0) return CheckResult.PASS;
 
         if (lastX != 0 || lastZ != 0) {

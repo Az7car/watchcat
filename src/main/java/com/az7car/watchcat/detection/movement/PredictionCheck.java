@@ -49,8 +49,8 @@ public class PredictionCheck extends AbstractCheck {
             }
         }
 
-        double dx = data.getPositionDelta().getX();
-        double dz = data.getPositionDelta().getZ();
+        double dx = data.getDeltaX();
+        double dz = data.getDeltaZ();
         predictedX = x + dx;
         predictedZ = z + dz;
         return CheckResult.PASS;

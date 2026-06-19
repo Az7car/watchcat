@@ -25,7 +25,7 @@ public class AirJumpCheck extends AbstractCheck {
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
         boolean onGround = move.isOnGround();
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
 
         if (!onGround) {
             airTicks++;

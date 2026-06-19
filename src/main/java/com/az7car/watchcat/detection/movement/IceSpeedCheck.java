@@ -29,8 +29,8 @@ public class IceSpeedCheck extends AbstractCheck {
         if (!below.name().contains("ICE") && !below.name().contains("FROSTED")) return CheckResult.PASS;
         if (move.isOnGround()) return CheckResult.PASS;
 
-        double dx = data.getPositionDelta().getX();
-        double dz = data.getPositionDelta().getZ();
+        double dx = data.getDeltaX();
+        double dz = data.getDeltaZ();
         double dh = Math.sqrt(dx * dx + dz * dz);
 
         if (dh > maxIceSpeed) {

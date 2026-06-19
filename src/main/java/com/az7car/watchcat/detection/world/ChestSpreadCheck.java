@@ -23,7 +23,7 @@ public class ChestSpreadCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundContainerClickPacket click)) return CheckResult.PASS;
-        int slot = click.getSlotNum();
+        int slot = click.slotNum();
         if (slot >= 0) {
             chestSpreadCount++;
             if (chestSpreadCount > 10) {

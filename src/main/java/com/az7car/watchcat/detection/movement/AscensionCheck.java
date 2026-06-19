@@ -28,7 +28,7 @@ public class AscensionCheck extends AbstractCheck {
     @Override
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundMovePlayerPacket move)) return CheckResult.PASS;
-        double dy = data.getPositionDelta().getY();
+        double dy = data.getDeltaY();
         if (dy <= 0) {
             lastDy = 0;
             return CheckResult.PASS;

@@ -25,5 +25,6 @@ public class TPSMonitor {
     }
 
     public double getTps() { return tps; }
+    public double getAverageTPS() { return tps; }
     public boolean isLagging() { return tps < 18.0; }
 }

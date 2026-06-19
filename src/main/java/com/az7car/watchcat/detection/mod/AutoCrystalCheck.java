@@ -36,7 +36,7 @@ public class AutoCrystalCheck extends AbstractCheck {
                     .findFirst().orElse(null);
             } catch (Exception e) {}
 
-            if (target != null && target.getType() == EntityType.ENDER_CRYSTAL) {
+            if (target != null && target.getType() == EntityType.END_CRYSTAL) {
                 long now = System.currentTimeMillis();
                 if (lastCrystalBreak > 0 && lastCrystalPlace > 0) {
                     long placeToBreak = now - lastCrystalPlace;

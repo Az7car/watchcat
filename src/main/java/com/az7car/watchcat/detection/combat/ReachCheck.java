@@ -9,7 +9,7 @@ import com.az7car.watchcat.util.RotationUtils;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.server.level.ServerPlayer;
-import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -31,7 +31,7 @@ public class ReachCheck extends AbstractCheck {
         if (!(packet instanceof ServerboundInteractPacket interactPacket)) return CheckResult.PASS;
         try {
             int entityId = interactPacket.getEntityId();
-            net.minecraft.world.entity.Entity nmsTarget = nmsPlayer.serverLevel().getEntity(entityId);
+            net.minecraft.world.entity.Entity nmsTarget = nmsPlayer.level().getEntity(entityId);
             if (nmsTarget == null) return CheckResult.PASS;
             Vector eyePos = player.getEyeLocation().toVector();
             double[] dir = RotationUtils.toDirection(data.getYaw(), data.getPitch());
@@ -53,7 +53,7 @@ public class ReachCheck extends AbstractCheck {
 
         try {
             int entityId = interactPacket.getEntityId();
-            net.minecraft.world.entity.Entity nmsTarget = nmsPlayer.serverLevel().getEntity(entityId);
+            net.minecraft.world.entity.Entity nmsTarget = nmsPlayer.level().getEntity(entityId);
             if (nmsTarget == null) return CheckResult.PASS;
 
             Vector eyePos = player.getEyeLocation().toVector();

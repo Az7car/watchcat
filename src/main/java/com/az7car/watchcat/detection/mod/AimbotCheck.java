@@ -26,8 +26,11 @@ public class AimbotCheck extends AbstractCheck {
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof PosRot)) return CheckResult.PASS;
         PosRot rot = (PosRot) packet;
-        float yaw = rot.getYaw(0);
-        float pitch = rot.getPitch(0);
+        float yaw = 0, pitch = 0;
+        try {
+            yaw = (float) rot.getClass().getMethod("getYaw").invoke(rot);
+            pitch = (float) rot.getClass().getMethod("getPitch").invoke(rot);
+        } catch (Exception e) { return CheckResult.PASS; }
 
         float dyaw = yaw - data.getLastYaw();
         float dpitch = pitch - data.getLastPitch();

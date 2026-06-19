@@ -47,7 +47,9 @@ public class AntiFloodCheck extends AbstractCheck {
     public CheckResult process(Player player, PlayerData data, Packet<?> packet, ServerPlayer nmsPlayer) {
         if (!(packet instanceof ServerboundChatPacket chat)) return CheckResult.PASS;
 
-        String message = chat.getMessage();
+        String message;
+        try { message = (String) chat.getClass().getMethod("message").invoke(chat); }
+        catch (Exception e) { return CheckResult.PASS; }
         if (message == null || message.isEmpty()) return CheckResult.PASS;
 
         java.util.UUID uuid = player.getUniqueId();
