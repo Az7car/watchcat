@@ -1,6 +1,7 @@
 package com.az7car.watchcat.core.netty;
 
 import com.az7car.watchcat.WatchcatPlugin;
+import com.az7car.watchcat.core.exempt.ExemptionSystem;
 import com.az7car.watchcat.detection.mod.AntiBotCheck;
 import com.az7car.watchcat.detection.mod.RaidCheck;
 import com.az7car.watchcat.punishment.AppealCodeManager;
@@ -12,9 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 import java.net.InetSocketAddress;
 
@@ -61,6 +62,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
+        ExemptionSystem.exemptLogin(p.getUniqueId());
         injector.inject(p);
         banWaveExecutor.checkPendingBan(p);
     }
@@ -72,6 +74,31 @@ public class PlayerListener implements Listener {
         if (flaggingSystem.getScore(p.getUniqueId()) >= 0.5) {
             flaggingSystem.unload(p.getUniqueId());
         }
+        ExemptionSystem.clear(p.getUniqueId());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onTeleport(PlayerTeleportEvent e) {
+        ExemptionSystem.exemptTeleport(e.getPlayer().getUniqueId());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onDamage(EntityDamageEvent e) {
+        if (e.getEntity() instanceof Player p) {
+            ExemptionSystem.exemptDamage(p.getUniqueId());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onVehicleEnter(VehicleEnterEvent e) {
+        if (e.getEntered() instanceof Player p) {
+            ExemptionSystem.exemptVehicle(p.getUniqueId());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onWorldChange(PlayerChangedWorldEvent e) {
+        ExemptionSystem.exemptDimensionSwitch(e.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

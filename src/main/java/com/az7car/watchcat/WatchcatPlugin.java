@@ -3,8 +3,11 @@ package com.az7car.watchcat;
 import com.az7car.watchcat.core.command.WatchcatCommand;
 import com.az7car.watchcat.core.config.WatchcatConfig;
 import com.az7car.watchcat.core.di.WatchcatInjector;
+import com.az7car.watchcat.core.exempt.ExemptionSystem;
+import com.az7car.watchcat.core.lag.LatencyTracker;
 import com.az7car.watchcat.core.netty.PacketInjector;
 import com.az7car.watchcat.core.pipeline.CheckRegistry;
+import com.az7car.watchcat.core.world.WorldSnapshot;
 import com.az7car.watchcat.detection.base.PlayerData;
 import com.az7car.watchcat.ml.AnomalyDetector;
 import com.az7car.watchcat.ml.ONNXInference;
@@ -13,6 +16,7 @@ import com.az7car.watchcat.punishment.BanWaveExecutor;
 import com.az7car.watchcat.punishment.ChatPunishmentManager;
 import com.az7car.watchcat.punishment.ShadowFlaggingSystem;
 import com.az7car.watchcat.util.TPSMonitor;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.UUID;
 
@@ -56,6 +60,8 @@ public class WatchcatPlugin extends JavaPlugin {
 
         injector.registerChecks(checkRegistry, config, anomalyDetector, flaggingSystem, chatPunishmentManager);
 
+        LatencyTracker.init(tpsMonitor);
+
         getServer().getPluginManager().registerEvents(new com.az7car.watchcat.core.netty.PlayerListener(packetInjector, flaggingSystem, banWaveExecutor, appealCodeManager, chatPunishmentManager, injector.createAntiBotCheck(config), injector.createRaidCheck(config)), this);
 
         packetInjector.injectAll();
@@ -66,6 +72,14 @@ public class WatchcatPlugin extends JavaPlugin {
 
         tpsMonitor.start(this);
 
+        Bukkit.getScheduler().runTaskTimer(this, () -> {
+            for (var player : Bukkit.getOnlinePlayers()) {
+                UUID pid = player.getUniqueId();
+                ExemptionSystem.tick(pid);
+                WorldSnapshot.capture(player.getWorld());
+            }
+        }, 1L, 1L);
+
         getLogger().info("Watchcat by @Az7car enabled. Protecting " + getServer().getOnlinePlayers().size() + " players.");
     }
 
@@ -75,6 +89,8 @@ public class WatchcatPlugin extends JavaPlugin {
         if (tpsMonitor != null) tpsMonitor.stop();
         if (onnxInference != null) onnxInference.close();
         PlayerData.cleanup();
+        ExemptionSystem.cleanup();
+        WorldSnapshot.cleanup();
         instance = null;
         getLogger().info("Watchcat disabled.");
     }

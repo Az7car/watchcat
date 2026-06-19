@@ -306,6 +306,26 @@ checks:
       enabled: true
       severity: low
       weight: 0.45
+    smoothaim:
+      enabled: true
+      severity: low
+      weight: 0.5
+    rageaura:
+      enabled: true
+      severity: medium
+      weight: 0.6
+    clickpattern:
+      enabled: true
+      severity: low
+      weight: 0.5
+    tickshift:
+      enabled: true
+      severity: medium
+      weight: 0.55
+    autosoup:
+      enabled: true
+      severity: low
+      weight: 0.4
 
   movement:
     speed:
@@ -536,6 +556,14 @@ checks:
       enabled: true
       severity: low
       weight: 0.45
+    speedfield:
+      enabled: true
+      severity: low
+      weight: 0.45
+    enderpearl:
+      enabled: true
+      severity: low
+      weight: 0.5
 
   world:
     scaffold:
@@ -688,6 +716,18 @@ checks:
       severity: low
       weight: 0.35
     autoanvil:
+      enabled: true
+      severity: low
+      weight: 0.35
+    boatglitch:
+      enabled: true
+      severity: low
+      weight: 0.5
+    containersort:
+      enabled: true
+      severity: low
+      weight: 0.35
+    autosmithing:
       enabled: true
       severity: low
       weight: 0.35
@@ -889,6 +929,34 @@ checks:
       enabled: true
       severity: low
       weight: 0.35
+    nofireoverlay:
+      enabled: true
+      severity: low
+      weight: 0.35
+    antifog:
+      enabled: true
+      severity: low
+      weight: 0.3
+    noscoreboard:
+      enabled: true
+      severity: low
+      weight: 0.3
+    antipotion:
+      enabled: true
+      severity: low
+      weight: 0.5
+    crashpayload:
+      enabled: true
+      severity: critical
+      weight: 0.9
+    esp:
+      enabled: true
+      severity: low
+      weight: 0.5
+    tracers:
+      enabled: true
+      severity: low
+      weight: 0.45
 
 # ML configuration
 ml:

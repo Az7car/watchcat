@@ -275,5 +275,26 @@ public class WatchcatInjector {
         registry.register(new AntiBerryCheck(config));
         registry.register(new NoPortalOverlayCheck(config));
         registry.register(new NoPumpkinCheck(config));
+
+        registry.register(new SmoothAimCheck(config));
+        registry.register(new RageAuraCheck(config));
+        registry.register(new ClickPatternCheck(config));
+        registry.register(new TickShiftCheck(config));
+        registry.register(new AutoSoupCheck(config));
+
+        registry.register(new SpeedFieldCheck(config));
+        registry.register(new EnderPearlCheck(config));
+
+        registry.register(new BoatGlitchCheck(config));
+        registry.register(new ContainerSortCheck(config));
+        registry.register(new AutoSmithingCheck(config));
+
+        registry.register(new NoFireOverlayCheck(config));
+        registry.register(new AntiFogCheck(config));
+        registry.register(new NoScoreboardCheck(config));
+        registry.register(new AntiPotionCheck(config));
+        registry.register(new CrashPayloadCheck(config));
+        registry.register(new ESPCheck(config));
+        registry.register(new TracersCheck(config));
     }
 }
