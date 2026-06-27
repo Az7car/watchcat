@@ -2,8 +2,8 @@
 
 Server-side anti-cheat for Paper 1.21.11. By @Az7car.
 
-Website: https://watchcat.gg
-Discord: https://discord.gg/2hPbabJ9jP
+Website: https://watchcat.ametystmc.net
+Discord: **https://discord.gg/N3QMbzPcq8**
 
 ## Features
 
